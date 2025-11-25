@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  /* 디자인 토큰 - 추후 확장 가능 */
+  --color-primary: #0f172a;
+  --color-secondary: #64748b;
+  --radius: 0.5rem;
+}
