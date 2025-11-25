@@ -12,7 +12,9 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "dotenv -e ../../.env.local -- npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
+    "chromatic:force": "dotenv -e ../../.env.local -- npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --force-rebuild"
   },
   "dependencies": {
     "react": "^19.1.1",
@@ -36,6 +38,8 @@
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/ui": "^2.1.8",
     "autoprefixer": "^10.4.21",
+    "chromatic": "^13.3.4",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
