@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { FormInput } from '../components/molecules/FormInput';
+import { FormInput } from '../shared/ui';
 
 const meta = {
   title: 'Molecules/FormInput',

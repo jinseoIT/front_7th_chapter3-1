@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { Alert } from '../components/organisms/Alert';
+import { Alert } from '../shared/ui';
 
 const meta = {
   title: 'Organisms/Alert',

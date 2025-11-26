@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FormInput } from '../components/molecules/FormInput';
+import { FormInput } from '../shared/ui';
 
 describe('FormInput 컴포넌트', () => {
   describe('기본 렌더링', () => {

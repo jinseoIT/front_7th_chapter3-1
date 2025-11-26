@@ -1,13 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { Header } from "../components/organisms/Header";
-import { Card } from "../components/organisms/Card";
-import { Table } from "../components/organisms/Table";
-import { Alert } from "../components/organisms/Alert";
-import { Modal } from "../components/organisms/Modal";
-import { Button } from "../components/atoms/Button";
-import { Badge } from "../components/atoms/Badge";
-import { FormInput } from "../components/molecules/FormInput";
+import { Header, Alert, Modal, Table, ButtonCustom as Button, Badge, FormInput } from "../shared/ui";
+import { Card } from "../shared/ui/card";
 import { useState } from "react";
 
 const meta = {

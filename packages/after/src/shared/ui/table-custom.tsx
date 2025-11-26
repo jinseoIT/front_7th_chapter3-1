@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Badge } from '../atoms/Badge';
-import { Button } from '../atoms/Button';
+import { Badge } from './badge-custom';
+import { Button as ButtonCustom } from './button-custom';
 
 interface Column {
   key: string;
@@ -126,12 +126,12 @@ export const Table: React.FC<TableProps> = ({
       if (columnKey === 'actions') {
         return (
           <div style={{ display: 'flex', gap: '8px' }}>
-            <Button size="sm" variant="primary" onClick={() => onEdit?.(row)}>
+            <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
               수정
-            </Button>
-            <Button size="sm" variant="danger" onClick={() => onDelete?.(row.id)}>
+            </ButtonCustom>
+            <ButtonCustom size="sm" variant="danger" onClick={() => onDelete?.(row.id)}>
               삭제
-            </Button>
+            </ButtonCustom>
           </div>
         );
       }
@@ -155,39 +155,39 @@ export const Table: React.FC<TableProps> = ({
       if (columnKey === 'actions') {
         return (
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <Button size="sm" variant="primary" onClick={() => onEdit?.(row)}>
+            <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
               수정
-            </Button>
+            </ButtonCustom>
             {row.status === 'draft' && (
-              <Button
+              <ButtonCustom
                 size="sm"
                 variant="success"
                 onClick={() => onPublish?.(row.id)}
               >
                 게시
-              </Button>
+              </ButtonCustom>
             )}
             {row.status === 'published' && (
-              <Button
+              <ButtonCustom
                 size="sm"
                 variant="secondary"
                 onClick={() => onArchive?.(row.id)}
               >
                 보관
-              </Button>
+              </ButtonCustom>
             )}
             {row.status === 'archived' && (
-              <Button
+              <ButtonCustom
                 size="sm"
                 variant="primary"
                 onClick={() => onRestore?.(row.id)}
               >
                 복원
-              </Button>
+              </ButtonCustom>
             )}
-            <Button size="sm" variant="danger" onClick={() => onDelete?.(row.id)}>
+            <ButtonCustom size="sm" variant="danger" onClick={() => onDelete?.(row.id)}>
               삭제
-            </Button>
+            </ButtonCustom>
           </div>
         );
       }
