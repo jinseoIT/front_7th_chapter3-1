@@ -1,6 +1,3 @@
-// shadcn/ui primitive components
-export * from './primitives';
-
 // Custom UI components
 export { Button } from './Button';
 export { Alert } from './Alert';
