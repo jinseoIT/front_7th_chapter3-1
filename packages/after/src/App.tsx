@@ -1,7 +1,7 @@
-import React from 'react'
-import { Header } from './shared/ui'
-import { ManagementPage } from './pages/ManagementPage'
-import './styles/globals.css'
+import React from "react";
+import { Header } from "./shared/ui";
+import { ManagementPage } from "./pages/ManagementPage";
+import "./styles/globals.css";
 
 export const App: React.FC = () => {
   return (
