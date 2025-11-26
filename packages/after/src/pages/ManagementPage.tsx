@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ButtonCustom as Button, Alert, Table, Modal } from '../shared/ui';
+import { Button, Alert, Table, Modal } from '../shared/ui';
 import { useUserManagement, UserForm, UserStats } from '../features/user-management';
 import { usePostManagement, PostForm, PostStats } from '../features/post-management';
 import type { User } from '../features/user-management';

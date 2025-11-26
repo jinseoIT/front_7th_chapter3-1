@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Badge } from './badge-custom';
-import { Button as ButtonCustom } from './button-custom';
+import React, { useState, useEffect } from "react";
+import { Badge } from "../Badge";
+import { Button as ButtonCustom } from "../Button";
 
 interface Column {
   key: string;
@@ -22,7 +22,7 @@ interface TableProps {
   onRowClick?: (row: any) => void;
 
   // 🚨 도메인 관심사 추가
-  entityType?: 'user' | 'post';
+  entityType?: "user" | "post";
   onEdit?: (item: any) => void;
   onDelete?: (id: number) => void;
   onPublish?: (id: number) => void;
@@ -49,9 +49,9 @@ export const Table: React.FC<TableProps> = ({
 }) => {
   const [tableData, setTableData] = useState<any[]>(data);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortColumn, setSortColumn] = useState('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortColumn, setSortColumn] = useState("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     setTableData(data);
@@ -60,7 +60,7 @@ export const Table: React.FC<TableProps> = ({
   const handleSort = (columnKey: string) => {
     if (!sortable) return;
 
-    const newDirection = sortColumn === columnKey && sortDirection === 'asc' ? 'desc' : 'asc';
+    const newDirection = sortColumn === columnKey && sortDirection === "asc" ? "desc" : "asc";
     setSortColumn(columnKey);
     setSortDirection(newDirection);
 
@@ -68,11 +68,11 @@ export const Table: React.FC<TableProps> = ({
       const aVal = a[columnKey];
       const bVal = b[columnKey];
 
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return newDirection === 'asc' ? aVal - bVal : bVal - aVal;
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return newDirection === "asc" ? aVal - bVal : bVal - aVal;
       }
 
-      return newDirection === 'asc'
+      return newDirection === "asc"
         ? String(aVal).localeCompare(String(bVal))
         : String(bVal).localeCompare(String(aVal));
     });
@@ -80,52 +80,44 @@ export const Table: React.FC<TableProps> = ({
     setTableData(sorted);
   };
 
-  const filteredData = searchable && searchTerm
-    ? tableData.filter(row =>
-        Object.values(row).some(val =>
-          String(val).toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData =
+    searchable && searchTerm
+      ? tableData.filter((row) =>
+          Object.values(row).some((val) => String(val).toLowerCase().includes(searchTerm.toLowerCase()))
         )
-      )
-    : tableData;
+      : tableData;
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
-  const tableClasses = [
-    'table',
-    striped && 'table-striped',
-    bordered && 'table-bordered',
-    hover && 'table-hover',
-  ].filter(Boolean).join(' ');
+  const tableClasses = ["table", striped && "table-striped", bordered && "table-bordered", hover && "table-hover"]
+    .filter(Boolean)
+    .join(" ");
 
-  const actualColumns = columns || (tableData[0] ? Object.keys(tableData[0]).map(key => ({ key, header: key, width: undefined })) : []);
+  const actualColumns =
+    columns || (tableData[0] ? Object.keys(tableData[0]).map((key) => ({ key, header: key, width: undefined })) : []);
 
   // 🚨 Bad Practice: Table 컴포넌트가 도메인별 렌더링 로직을 알고 있음
   const renderCell = (row: any, columnKey: string) => {
     const value = row[columnKey];
 
     // 도메인별 특수 렌더링
-    if (entityType === 'user') {
-      if (columnKey === 'role') {
+    if (entityType === "user") {
+      if (columnKey === "role") {
         return <Badge userRole={value} showIcon />;
       }
-      if (columnKey === 'status') {
+      if (columnKey === "status") {
         // User status를 Badge status로 변환
-        const badgeStatus =
-          value === 'active' ? 'published' :
-          value === 'inactive' ? 'draft' : 'rejected';
+        const badgeStatus = value === "active" ? "published" : value === "inactive" ? "draft" : "rejected";
         return <Badge status={badgeStatus} showIcon />;
       }
-      if (columnKey === 'lastLogin') {
-        return value || '-';
+      if (columnKey === "lastLogin") {
+        return value || "-";
       }
-      if (columnKey === 'actions') {
+      if (columnKey === "actions") {
         return (
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: "flex", gap: "8px" }}>
             <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
               수정
             </ButtonCustom>
@@ -137,51 +129,46 @@ export const Table: React.FC<TableProps> = ({
       }
     }
 
-    if (entityType === 'post') {
-      if (columnKey === 'category') {
+    if (entityType === "post") {
+      if (columnKey === "category") {
         const type =
-          value === 'development' ? 'primary' :
-          value === 'design' ? 'info' :
-          value === 'accessibility' ? 'danger' :
-          'secondary';
-        return <Badge type={type} pill>{value}</Badge>;
+          value === "development"
+            ? "primary"
+            : value === "design"
+            ? "info"
+            : value === "accessibility"
+            ? "danger"
+            : "secondary";
+        return (
+          <Badge type={type} pill>
+            {value}
+          </Badge>
+        );
       }
-      if (columnKey === 'status') {
+      if (columnKey === "status") {
         return <Badge status={value} showIcon />;
       }
-      if (columnKey === 'views') {
-        return value?.toLocaleString() || '0';
+      if (columnKey === "views") {
+        return value?.toLocaleString() || "0";
       }
-      if (columnKey === 'actions') {
+      if (columnKey === "actions") {
         return (
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
               수정
             </ButtonCustom>
-            {row.status === 'draft' && (
-              <ButtonCustom
-                size="sm"
-                variant="success"
-                onClick={() => onPublish?.(row.id)}
-              >
+            {row.status === "draft" && (
+              <ButtonCustom size="sm" variant="success" onClick={() => onPublish?.(row.id)}>
                 게시
               </ButtonCustom>
             )}
-            {row.status === 'published' && (
-              <ButtonCustom
-                size="sm"
-                variant="secondary"
-                onClick={() => onArchive?.(row.id)}
-              >
+            {row.status === "published" && (
+              <ButtonCustom size="sm" variant="secondary" onClick={() => onArchive?.(row.id)}>
                 보관
               </ButtonCustom>
             )}
-            {row.status === 'archived' && (
-              <ButtonCustom
-                size="sm"
-                variant="primary"
-                onClick={() => onRestore?.(row.id)}
-              >
+            {row.status === "archived" && (
+              <ButtonCustom size="sm" variant="primary" onClick={() => onRestore?.(row.id)}>
                 복원
               </ButtonCustom>
             )}
@@ -204,17 +191,17 @@ export const Table: React.FC<TableProps> = ({
   return (
     <div className="table-container">
       {searchable && (
-        <div style={{ marginBottom: '16px' }}>
+        <div style={{ marginBottom: "16px" }}>
           <input
             type="text"
             placeholder="검색..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
-              padding: '8px 12px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              width: '300px',
+              padding: "8px 12px",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              width: "300px",
             }}
           />
         </div>
@@ -229,11 +216,16 @@ export const Table: React.FC<TableProps> = ({
                 style={column.width ? { width: column.width } : undefined}
                 onClick={() => sortable && handleSort(column.key)}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: sortable ? 'pointer' : 'default' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    cursor: sortable ? "pointer" : "default",
+                  }}
+                >
                   {column.header}
-                  {sortable && sortColumn === column.key && (
-                    <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                  )}
+                  {sortable && sortColumn === column.key && <span>{sortDirection === "asc" ? "↑" : "↓"}</span>}
                 </div>
               </th>
             ))}
@@ -241,15 +233,9 @@ export const Table: React.FC<TableProps> = ({
         </thead>
         <tbody>
           {paginatedData.map((row, rowIndex) => (
-            <tr
-              key={rowIndex}
-              onClick={() => onRowClick?.(row)}
-              style={{ cursor: onRowClick ? 'pointer' : 'default' }}
-            >
+            <tr key={rowIndex} onClick={() => onRowClick?.(row)} style={{ cursor: onRowClick ? "pointer" : "default" }}>
               {actualColumns.map((column) => (
-                <td key={column.key}>
-                  {entityType ? renderCell(row, column.key) : row[column.key]}
-                </td>
+                <td key={column.key}>{entityType ? renderCell(row, column.key) : row[column.key]}</td>
               ))}
             </tr>
           ))}
@@ -257,37 +243,39 @@ export const Table: React.FC<TableProps> = ({
       </table>
 
       {totalPages > 1 && (
-        <div style={{
-          marginTop: '16px',
-          display: 'flex',
-          gap: '8px',
-          justifyContent: 'center',
-        }}>
+        <div
+          style={{
+            marginTop: "16px",
+            display: "flex",
+            gap: "8px",
+            justifyContent: "center",
+          }}
+        >
           <button
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             style={{
-              padding: '6px 12px',
-              border: '1px solid #ddd',
-              background: 'white',
-              borderRadius: '4px',
-              cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+              padding: "6px 12px",
+              border: "1px solid #ddd",
+              background: "white",
+              borderRadius: "4px",
+              cursor: currentPage === 1 ? "not-allowed" : "pointer",
             }}
           >
             이전
           </button>
-          <span style={{ padding: '6px 12px' }}>
+          <span style={{ padding: "6px 12px" }}>
             {currentPage} / {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             style={{
-              padding: '6px 12px',
-              border: '1px solid #ddd',
-              background: 'white',
-              borderRadius: '4px',
-              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+              padding: "6px 12px",
+              border: "1px solid #ddd",
+              background: "white",
+              borderRadius: "4px",
+              cursor: currentPage === totalPages ? "not-allowed" : "pointer",
             }}
           >
             다음
