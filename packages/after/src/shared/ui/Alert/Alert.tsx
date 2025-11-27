@@ -19,11 +19,11 @@ const alertVariants = cva(
   }
 );
 
-const alertIconVariants = cva("text-xl flex-shrink-0");
-const alertContentVariants = cva("flex-1");
-const alertTitleVariants = cva("font-bold mb-1 text-base");
-const alertBodyVariants = cva("text-sm leading-6");
-const alertCloseVariants = cva("bg-transparent border-none cursor-pointer text-xl p-0 px-1 ml-auto flex-shrink-0");
+const alertIconClassName = "text-xl flex-shrink-0";
+const alertContentClassName = "flex-1";
+const alertTitleClassName = "font-bold mb-1 text-base";
+const alertBodyClassName = "text-sm leading-6";
+const alertCloseClassName = "bg-transparent border-none cursor-pointer text-xl p-0 px-1 ml-auto flex-shrink-0";
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof alertVariants> {
   children: React.ReactNode;
@@ -47,23 +47,19 @@ const getIcon = (variant: AlertProps["variant"]) => {
   }
 };
 
-export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
-  ({ className, variant, title, onClose, showIcon = true, children, ...props }, ref) => {
-    return (
-      <div ref={ref} className={alertVariants({ variant, className })} {...props}>
-        {showIcon && <div className={alertIconVariants()}>{getIcon(variant)}</div>}
-        <div className={alertContentVariants()}>
-          {title && <div className={alertTitleVariants()}>{title}</div>}
-          <div className={alertBodyVariants()}>{children}</div>
-        </div>
-        {onClose && (
-          <button onClick={onClose} className={alertCloseVariants()}>
-            ×
-          </button>
-        )}
+export const Alert = ({ className, variant, title, onClose, showIcon = true, children, ...props }: AlertProps) => {
+  return (
+    <div className={alertVariants({ variant, className })} {...props}>
+      {showIcon && <div className={alertIconClassName}>{getIcon(variant)}</div>}
+      <div className={alertContentClassName}>
+        {title && <div className={alertTitleClassName}>{title}</div>}
+        <div className={alertBodyClassName}>{children}</div>
       </div>
-    );
-  }
-);
-
-Alert.displayName = "Alert";
+      {onClose && (
+        <button onClick={onClose} className={alertCloseClassName}>
+          ×
+        </button>
+      )}
+    </div>
+  );
+};
