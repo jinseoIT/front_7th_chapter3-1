@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button, Alert, Table, Modal } from '../shared/ui';
-import { useUserManagement, UserForm, UserStats } from '../features/user-management';
-import { usePostManagement, PostForm, PostStats } from '../features/post-management';
+import { useUserManagement, UserForm, UserStats, createUserTableColumns } from '../features/user-management';
+import { usePostManagement, PostForm, PostStats, createPostTableColumns } from '../features/post-management';
 import type { User } from '../features/user-management';
 import type { Post } from '../features/post-management';
 
@@ -169,31 +169,27 @@ export const ManagementPage: React.FC = () => {
     }
   };
 
-  const renderTableColumns = () => {
-    if (entityType === 'user') {
-      return [
-        { key: 'id', header: 'ID', width: '60px' },
-        { key: 'username', header: '사용자명', width: '150px' },
-        { key: 'email', header: '이메일' },
-        { key: 'role', header: '역할', width: '120px' },
-        { key: 'status', header: '상태', width: '120px' },
-        { key: 'createdAt', header: '생성일', width: '120px' },
-        { key: 'lastLogin', header: '마지막 로그인', width: '140px' },
-        { key: 'actions', header: '관리', width: '200px' },
-      ];
-    } else {
-      return [
-        { key: 'id', header: 'ID', width: '60px' },
-        { key: 'title', header: '제목' },
-        { key: 'author', header: '작성자', width: '120px' },
-        { key: 'category', header: '카테고리', width: '140px' },
-        { key: 'status', header: '상태', width: '120px' },
-        { key: 'views', header: '조회수', width: '100px' },
-        { key: 'createdAt', header: '작성일', width: '120px' },
-        { key: 'actions', header: '관리', width: '250px' },
-      ];
-    }
-  };
+  // 테이블 컬럼 정의
+  const userColumns = useMemo(
+    () =>
+      createUserTableColumns({
+        onEdit: handleUserEdit,
+        onDelete: handleUserDelete,
+      }),
+    []
+  );
+
+  const postColumns = useMemo(
+    () =>
+      createPostTableColumns({
+        onEdit: handlePostEdit,
+        onDelete: handlePostDelete,
+        onPublish: handlePostPublish,
+        onArchive: handlePostArchive,
+        onRestore: handlePostRestore,
+      }),
+    []
+  );
 
   const userStats = userManagement.getStats();
   const postStats = postManagement.getStats();
@@ -277,18 +273,21 @@ export const ManagementPage: React.FC = () => {
             )}
 
             <div className="border border-gray-300 bg-white overflow-auto">
-              <Table
-                columns={renderTableColumns()}
-                data={entityType === 'user' ? userManagement.users : postManagement.posts}
-                striped
-                hover
-                entityType={entityType}
-                onEdit={entityType === 'user' ? handleUserEdit : handlePostEdit}
-                onDelete={entityType === 'user' ? handleUserDelete : handlePostDelete}
-                onPublish={entityType === 'post' ? handlePostPublish : undefined}
-                onArchive={entityType === 'post' ? handlePostArchive : undefined}
-                onRestore={entityType === 'post' ? handlePostRestore : undefined}
-              />
+              {entityType === 'user' ? (
+                <Table
+                  columns={userColumns}
+                  data={userManagement.users as Array<User & Record<string, unknown>>}
+                  striped
+                  hover
+                />
+              ) : (
+                <Table
+                  columns={postColumns}
+                  data={postManagement.posts as Array<Post & Record<string, unknown>>}
+                  striped
+                  hover
+                />
+              )}
             </div>
           </div>
         </div>

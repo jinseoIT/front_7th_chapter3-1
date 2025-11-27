@@ -1,63 +1,67 @@
 import React, { useState, useEffect } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Badge } from "../Badge";
-import { Button as ButtonCustom } from "../Button";
 
-interface Column {
+export interface Column<T = Record<string, unknown>> {
   key: string;
   header: string;
   width?: string;
   sortable?: boolean;
+  render?: (value: unknown, row: T) => React.ReactNode;
 }
 
-const tableContainerVariants = cva("table-container");
+const tableContainerVariants = cva("w-full overflow-x-auto");
 
-const tableVariants = cva("table", {
-  variants: {
-    striped: {
-      true: "table-striped",
+const tableVariants = cva(
+  "w-full border-collapse text-sm text-left",
+  {
+    variants: {
+      striped: {
+        true: "[&_tbody_tr:nth-child(odd)]:bg-gray-50",
+      },
+      bordered: {
+        true: "border border-gray-200",
+      },
+      hover: {
+        true: "[&_tbody_tr:hover]:bg-gray-100",
+      },
     },
-    bordered: {
-      true: "table-bordered",
+  }
+);
+
+const searchInputVariants = cva(
+  "w-full max-w-sm px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+);
+
+const paginationContainerVariants = cva(
+  "flex items-center justify-center gap-2 mt-4 py-3"
+);
+
+const paginationButtonVariants = cva(
+  "px-4 py-2 text-sm font-medium rounded-md transition-colors",
+  {
+    variants: {
+      disabled: {
+        true: "bg-gray-100 text-gray-400 cursor-not-allowed",
+        false: "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer",
+      },
     },
-    hover: {
-      true: "table-hover",
+    defaultVariants: {
+      disabled: false,
     },
-  },
-});
+  }
+);
 
-const searchInputVariants = cva("table-search-input");
-
-const paginationContainerVariants = cva("table-pagination");
-
-const paginationButtonVariants = cva("table-pagination-button", {
-  variants: {
-    disabled: {
-      true: "disabled",
-    },
-  },
-});
-
-// 🚨 Bad Practice: UI 컴포넌트가 도메인 타입을 알고 있음
-export interface TableProps extends VariantProps<typeof tableVariants> {
-  columns?: Column[];
-  data?: any[];
+export interface TableProps<T = Record<string, unknown>> extends VariantProps<typeof tableVariants> {
+  columns?: Column<T>[];
+  data?: T[];
   pageSize?: number;
   searchable?: boolean;
   sortable?: boolean;
-  onRowClick?: (row: any) => void;
+  onRowClick?: (row: T) => void;
   className?: string;
-
-  // 🚨 도메인 관심사 추가
-  entityType?: "user" | "post";
-  onEdit?: (item: any) => void;
-  onDelete?: (id: number) => void;
-  onPublish?: (id: number) => void;
-  onArchive?: (id: number) => void;
-  onRestore?: (id: number) => void;
 }
 
-export const Table: React.FC<TableProps> = ({
+export const Table = <T extends Record<string, unknown> = Record<string, unknown>>({
   columns,
   data = [],
   striped = false,
@@ -67,15 +71,9 @@ export const Table: React.FC<TableProps> = ({
   searchable = false,
   sortable = false,
   onRowClick,
-  entityType,
-  onEdit,
-  onDelete,
-  onPublish,
-  onArchive,
-  onRestore,
   className,
-}) => {
-  const [tableData, setTableData] = useState<any[]>(data);
+}: TableProps<T>) => {
+  const [tableData, setTableData] = useState<T[]>(data);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState("");
@@ -119,89 +117,15 @@ export const Table: React.FC<TableProps> = ({
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
-  const actualColumns =
-    columns || (tableData[0] ? Object.keys(tableData[0]).map((key) => ({ key, header: key, width: undefined })) : []);
+  const actualColumns: Column<T>[] =
+    columns || (tableData[0] ? Object.keys(tableData[0]).map((key) => ({ key, header: key })) : []);
 
-  // 🚨 Bad Practice: Table 컴포넌트가 도메인별 렌더링 로직을 알고 있음
-  const renderCell = (row: any, columnKey: string) => {
-    const value = row[columnKey];
+  const renderCell = (row: T, column: Column<T>) => {
+    const value = row[column.key];
 
-    // 도메인별 특수 렌더링
-    if (entityType === "user") {
-      if (columnKey === "role") {
-        return <Badge userRole={value} />;
-      }
-      if (columnKey === "status") {
-        // User status를 Badge status로 변환
-        const badgeStatus = value === "active" ? "published" : value === "inactive" ? "draft" : "rejected";
-        return <Badge status={badgeStatus} />;
-      }
-      if (columnKey === "lastLogin") {
-        return value || "-";
-      }
-      if (columnKey === "actions") {
-        return (
-          <div className="flex gap-2">
-            <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
-              수정
-            </ButtonCustom>
-            <ButtonCustom size="sm" variant="danger" onClick={() => onDelete?.(row.id)}>
-              삭제
-            </ButtonCustom>
-          </div>
-        );
-      }
-    }
-
-    if (entityType === "post") {
-      if (columnKey === "category") {
-        const type =
-          value === "development"
-            ? "primary"
-            : value === "design"
-            ? "info"
-            : value === "accessibility"
-            ? "danger"
-            : "secondary";
-        return (
-          <Badge type={type} pill>
-            {value}
-          </Badge>
-        );
-      }
-      if (columnKey === "status") {
-        return <Badge status={value} />;
-      }
-      if (columnKey === "views") {
-        return value?.toLocaleString() || "0";
-      }
-      if (columnKey === "actions") {
-        return (
-          <div className="flex gap-2 flex-wrap">
-            <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
-              수정
-            </ButtonCustom>
-            {row.status === "draft" && (
-              <ButtonCustom size="sm" variant="success" onClick={() => onPublish?.(row.id)}>
-                게시
-              </ButtonCustom>
-            )}
-            {row.status === "published" && (
-              <ButtonCustom size="sm" variant="secondary" onClick={() => onArchive?.(row.id)}>
-                보관
-              </ButtonCustom>
-            )}
-            {row.status === "archived" && (
-              <ButtonCustom size="sm" variant="primary" onClick={() => onRestore?.(row.id)}>
-                복원
-              </ButtonCustom>
-            )}
-            <ButtonCustom size="sm" variant="danger" onClick={() => onDelete?.(row.id)}>
-              삭제
-            </ButtonCustom>
-          </div>
-        );
-      }
+    // 커스텀 렌더러가 있으면 사용
+    if (column.render) {
+      return column.render(value, row);
     }
 
     // React Element면 그대로 렌더링
@@ -209,7 +133,7 @@ export const Table: React.FC<TableProps> = ({
       return value;
     }
 
-    return value;
+    return String(value ?? "");
   };
 
   return (
@@ -221,40 +145,57 @@ export const Table: React.FC<TableProps> = ({
             placeholder="검색..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`${searchInputVariants()} p-2 px-3 border border-gray-300 rounded w-[300px]`}
+            className={searchInputVariants()}
           />
         </div>
       )}
 
       <table className={tableVariants({ striped, bordered, hover, className })}>
-        <thead>
+        <thead className="bg-gray-100 border-b-2 border-gray-300">
           <tr>
             {actualColumns.map((column) => (
               <th
                 key={column.key}
                 style={column.width ? { width: column.width } : undefined}
-                onClick={() => sortable && handleSort(column.key)}
+                onClick={() => sortable && column.sortable !== false && handleSort(column.key)}
+                className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
               >
                 <div
-                  className={`flex items-center gap-1 ${sortable ? "cursor-pointer" : "cursor-default"}`}
+                  className={`flex items-center gap-1 ${
+                    sortable && column.sortable !== false ? "cursor-pointer select-none hover:text-gray-900" : "cursor-default"
+                  }`}
                 >
                   {column.header}
-                  {sortable && sortColumn === column.key && <span>{sortDirection === "asc" ? "↑" : "↓"}</span>}
+                  {sortable && sortColumn === column.key && (
+                    <span className="text-blue-600">{sortDirection === "asc" ? "↑" : "↓"}</span>
+                  )}
                 </div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {paginatedData.map((row, rowIndex) => (
-            <tr key={rowIndex} onClick={() => onRowClick?.(row)} className={onRowClick ? "cursor-pointer" : "cursor-default"}>
+            <tr
+              key={rowIndex}
+              onClick={() => onRowClick?.(row)}
+              className={onRowClick ? "cursor-pointer transition-colors" : "cursor-default"}
+            >
               {actualColumns.map((column) => (
-                <td key={column.key}>{entityType ? renderCell(row, column.key) : row[column.key]}</td>
+                <td key={column.key} className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
+                  {renderCell(row, column)}
+                </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
+
+      {paginatedData.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          데이터가 없습니다.
+        </div>
+      )}
 
       {totalPages > 1 && (
         <div className={paginationContainerVariants()}>
@@ -265,7 +206,7 @@ export const Table: React.FC<TableProps> = ({
           >
             이전
           </button>
-          <span className="py-1.5 px-3">
+          <span className="py-1.5 px-3 text-sm text-gray-700">
             {currentPage} / {totalPages}
           </span>
           <button
