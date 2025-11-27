@@ -1,48 +1,73 @@
-import React from 'react';
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-// Select Component - Inconsistent with Input component
 interface Option {
   value: string;
   label: string;
 }
 
-interface FormSelectProps {
+const formSelectVariants = cva("form-select", {
+  variants: {
+    error: {
+      true: "error",
+    },
+    size: {
+      sm: "form-select-sm",
+      md: "form-select-md",
+      lg: "form-select-lg",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
+const formGroupVariants = cva("form-group");
+
+const formLabelVariants = cva("form-label");
+
+const formHelperTextVariants = cva("form-helper-text", {
+  variants: {
+    error: {
+      true: "error",
+    },
+  },
+});
+
+export interface FormSelectProps
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "onChange" | "size">,
+    Omit<VariantProps<typeof formSelectVariants>, "error"> {
   name: string;
   value: string;
   onChange: (value: string) => void;
   options: Option[];
   label?: string;
   placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
   error?: string;
   helpText?: string;
-  size?: 'sm' | 'md' | 'lg';
 }
 
 export const FormSelect: React.FC<FormSelectProps> = ({
+  className,
   name,
   value,
   onChange,
   options,
   label,
-  placeholder = 'Select an option...',
+  placeholder = "Select an option...",
   required = false,
   disabled = false,
   error,
   helpText,
-  size = 'md',
+  size = "md",
+  ...props
 }) => {
-  void size; // Keep for API consistency but not used in rendering
-  const selectClasses = ['form-select', error && 'error'].filter(Boolean).join(' ');
-  const helperClasses = ['form-helper-text', error && 'error'].filter(Boolean).join(' ');
-
   return (
-    <div className="form-group">
+    <div className={formGroupVariants()}>
       {label && (
-        <label className="form-label">
+        <label className={formLabelVariants()}>
           {label}
-          {required && <span style={{ color: '#d32f2f' }}>*</span>}
+          {required && <span style={{ color: "#d32f2f" }}>*</span>}
         </label>
       )}
 
@@ -52,7 +77,8 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         onChange={(e) => onChange(e.target.value)}
         required={required}
         disabled={disabled}
-        className={selectClasses}
+        className={formSelectVariants({ error: !!error, size, className })}
+        {...props}
       >
         <option value="" disabled>
           {placeholder}
@@ -64,8 +90,8 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         ))}
       </select>
 
-      {error && <span className={helperClasses}>{error}</span>}
-      {helpText && !error && <span className="form-helper-text">{helpText}</span>}
+      {error && <span className={formHelperTextVariants({ error: true })}>{error}</span>}
+      {helpText && !error && <span className={formHelperTextVariants()}>{helpText}</span>}
     </div>
   );
 };

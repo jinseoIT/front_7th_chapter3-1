@@ -1,13 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-interface ModalProps {
+const modalOverlayVariants = cva("modal-overlay");
+
+const modalContentVariants = cva("modal-content", {
+  variants: {
+    size: {
+      small: "modal-small",
+      medium: "modal-medium",
+      large: "modal-large",
+    },
+  },
+  defaultVariants: {
+    size: "medium",
+  },
+});
+
+const modalHeaderVariants = cva("modal-header");
+
+const modalTitleVariants = cva("modal-title");
+
+const modalCloseVariants = cva("modal-close");
+
+const modalBodyVariants = cva("modal-body");
+
+const modalFooterVariants = cva("modal-footer");
+
+export interface ModalProps extends VariantProps<typeof modalContentVariants> {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-  size?: 'small' | 'medium' | 'large';
   showFooter?: boolean;
   footerContent?: React.ReactNode;
+  className?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -15,44 +41,37 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  size = 'medium',
+  size = "medium",
   showFooter = false,
   footerContent,
+  className,
 }) => {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const modalClasses = ['modal-content', `modal-${size}`].join(' ');
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className={modalClasses} onClick={(e) => e.stopPropagation()}>
+    <div className={modalOverlayVariants()} onClick={onClose}>
+      <div className={modalContentVariants({ size, className })} onClick={(e) => e.stopPropagation()}>
         {title && (
-          <div className="modal-header">
-            <h3 className="modal-title">{title}</h3>
-            <button className="modal-close" onClick={onClose}>
+          <div className={modalHeaderVariants()}>
+            <h3 className={modalTitleVariants()}>{title}</h3>
+            <button className={modalCloseVariants()} onClick={onClose}>
               ×
             </button>
           </div>
         )}
-        <div className="modal-body">
-          {children}
-        </div>
-        {showFooter && footerContent && (
-          <div className="modal-footer">
-            {footerContent}
-          </div>
-        )}
+        <div className={modalBodyVariants()}>{children}</div>
+        {showFooter && footerContent && <div className={modalFooterVariants()}>{footerContent}</div>}
       </div>
     </div>
   );

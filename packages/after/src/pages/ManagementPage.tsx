@@ -4,7 +4,6 @@ import { useUserManagement, UserForm, UserStats } from '../features/user-managem
 import { usePostManagement, PostForm, PostStats } from '../features/post-management';
 import type { User } from '../features/user-management';
 import type { Post } from '../features/post-management';
-import '../styles/components.css';
 
 type EntityType = 'user' | 'post';
 

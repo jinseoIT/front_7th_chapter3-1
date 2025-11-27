@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { Badge } from "../Badge";
 import { Button as ButtonCustom } from "../Button";
 
@@ -9,17 +10,43 @@ interface Column {
   sortable?: boolean;
 }
 
+const tableContainerVariants = cva("table-container");
+
+const tableVariants = cva("table", {
+  variants: {
+    striped: {
+      true: "table-striped",
+    },
+    bordered: {
+      true: "table-bordered",
+    },
+    hover: {
+      true: "table-hover",
+    },
+  },
+});
+
+const searchInputVariants = cva("table-search-input");
+
+const paginationContainerVariants = cva("table-pagination");
+
+const paginationButtonVariants = cva("table-pagination-button", {
+  variants: {
+    disabled: {
+      true: "disabled",
+    },
+  },
+});
+
 // 🚨 Bad Practice: UI 컴포넌트가 도메인 타입을 알고 있음
-interface TableProps {
+export interface TableProps extends VariantProps<typeof tableVariants> {
   columns?: Column[];
   data?: any[];
-  striped?: boolean;
-  bordered?: boolean;
-  hover?: boolean;
   pageSize?: number;
   searchable?: boolean;
   sortable?: boolean;
   onRowClick?: (row: any) => void;
+  className?: string;
 
   // 🚨 도메인 관심사 추가
   entityType?: "user" | "post";
@@ -46,6 +73,7 @@ export const Table: React.FC<TableProps> = ({
   onPublish,
   onArchive,
   onRestore,
+  className,
 }) => {
   const [tableData, setTableData] = useState<any[]>(data);
   const [currentPage, setCurrentPage] = useState(1);
@@ -91,10 +119,6 @@ export const Table: React.FC<TableProps> = ({
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
-  const tableClasses = ["table", striped && "table-striped", bordered && "table-bordered", hover && "table-hover"]
-    .filter(Boolean)
-    .join(" ");
-
   const actualColumns =
     columns || (tableData[0] ? Object.keys(tableData[0]).map((key) => ({ key, header: key, width: undefined })) : []);
 
@@ -105,12 +129,12 @@ export const Table: React.FC<TableProps> = ({
     // 도메인별 특수 렌더링
     if (entityType === "user") {
       if (columnKey === "role") {
-        return <Badge userRole={value} showIcon />;
+        return <Badge userRole={value} />;
       }
       if (columnKey === "status") {
         // User status를 Badge status로 변환
         const badgeStatus = value === "active" ? "published" : value === "inactive" ? "draft" : "rejected";
-        return <Badge status={badgeStatus} showIcon />;
+        return <Badge status={badgeStatus} />;
       }
       if (columnKey === "lastLogin") {
         return value || "-";
@@ -146,7 +170,7 @@ export const Table: React.FC<TableProps> = ({
         );
       }
       if (columnKey === "status") {
-        return <Badge status={value} showIcon />;
+        return <Badge status={value} />;
       }
       if (columnKey === "views") {
         return value?.toLocaleString() || "0";
@@ -189,7 +213,7 @@ export const Table: React.FC<TableProps> = ({
   };
 
   return (
-    <div className="table-container">
+    <div className={tableContainerVariants()}>
       {searchable && (
         <div style={{ marginBottom: "16px" }}>
           <input
@@ -197,6 +221,7 @@ export const Table: React.FC<TableProps> = ({
             placeholder="검색..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className={searchInputVariants()}
             style={{
               padding: "8px 12px",
               border: "1px solid #ddd",
@@ -207,7 +232,7 @@ export const Table: React.FC<TableProps> = ({
         </div>
       )}
 
-      <table className={tableClasses}>
+      <table className={tableVariants({ striped, bordered, hover, className })}>
         <thead>
           <tr>
             {actualColumns.map((column) => (
@@ -243,24 +268,11 @@ export const Table: React.FC<TableProps> = ({
       </table>
 
       {totalPages > 1 && (
-        <div
-          style={{
-            marginTop: "16px",
-            display: "flex",
-            gap: "8px",
-            justifyContent: "center",
-          }}
-        >
+        <div className={paginationContainerVariants()}>
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            style={{
-              padding: "6px 12px",
-              border: "1px solid #ddd",
-              background: "white",
-              borderRadius: "4px",
-              cursor: currentPage === 1 ? "not-allowed" : "pointer",
-            }}
+            className={paginationButtonVariants({ disabled: currentPage === 1 })}
           >
             이전
           </button>
@@ -270,13 +282,7 @@ export const Table: React.FC<TableProps> = ({
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            style={{
-              padding: "6px 12px",
-              border: "1px solid #ddd",
-              background: "white",
-              borderRadius: "4px",
-              cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-            }}
+            className={paginationButtonVariants({ disabled: currentPage === totalPages })}
           >
             다음
           </button>

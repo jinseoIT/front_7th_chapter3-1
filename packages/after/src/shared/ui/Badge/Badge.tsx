@@ -28,8 +28,9 @@ const badgeVariants = cva("badge", {
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
+    Omit<VariantProps<typeof badgeVariants>, 'variant'> {
   children?: React.ReactNode;
+  type?: "primary" | "secondary" | "success" | "danger" | "warning" | "info";
   status?: "published" | "draft" | "archived" | "pending" | "rejected";
   userRole?: "admin" | "moderator" | "user" | "guest";
   priority?: "high" | "medium" | "low";
@@ -100,7 +101,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
   (
     {
       className,
-      variant,
+      type,
       size,
       pill,
       status,
@@ -112,7 +113,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     },
     ref
   ) => {
-    let actualVariant = variant;
+    let actualVariant = type;
     let actualContent = children;
 
     const statusConfig = status ? getStatusConfig(status) : null;
@@ -120,18 +121,19 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const priorityConfig = priority ? getPriorityConfig(priority) : null;
     const paymentStatusConfig = paymentStatus ? getPaymentStatusConfig(paymentStatus) : null;
 
-    if (statusConfig) {
-      actualVariant = statusConfig.variant;
-      actualContent = actualContent || statusConfig.text;
-    } else if (userRoleConfig) {
-      actualVariant = userRoleConfig.variant;
-      actualContent = actualContent || userRoleConfig.text;
+    // Priority: paymentStatus > priority > userRole > status > type
+    if (paymentStatusConfig) {
+      actualVariant = paymentStatusConfig.variant;
+      actualContent = actualContent || paymentStatusConfig.text;
     } else if (priorityConfig) {
       actualVariant = priorityConfig.variant;
       actualContent = actualContent || priorityConfig.text;
-    } else if (paymentStatusConfig) {
-      actualVariant = paymentStatusConfig.variant;
-      actualContent = actualContent || paymentStatusConfig.text;
+    } else if (userRoleConfig) {
+      actualVariant = userRoleConfig.variant;
+      actualContent = actualContent || userRoleConfig.text;
+    } else if (statusConfig) {
+      actualVariant = statusConfig.variant;
+      actualContent = actualContent || statusConfig.text;
     }
 
     return (

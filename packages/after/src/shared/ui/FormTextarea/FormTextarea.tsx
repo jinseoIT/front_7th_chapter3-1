@@ -1,20 +1,47 @@
-import React from 'react';
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-// Textarea Component - Yet another inconsistent API
-interface FormTextareaProps {
+const formTextareaVariants = cva("form-textarea", {
+  variants: {
+    error: {
+      true: "error",
+    },
+    size: {
+      sm: "form-textarea-sm",
+      md: "form-textarea-md",
+      lg: "form-textarea-lg",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
+const formGroupVariants = cva("form-group");
+
+const formLabelVariants = cva("form-label");
+
+const formHelperTextVariants = cva("form-helper-text", {
+  variants: {
+    error: {
+      true: "error",
+    },
+  },
+});
+
+export interface FormTextareaProps
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "value" | "onChange" | "size">,
+    Omit<VariantProps<typeof formTextareaVariants>, "error"> {
   name: string;
   value: string;
   onChange: (value: string) => void;
   label?: string;
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
   error?: string;
   helpText?: string;
-  rows?: number;
 }
 
 export const FormTextarea: React.FC<FormTextareaProps> = ({
+  className,
   name,
   value,
   onChange,
@@ -25,16 +52,15 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
   error,
   helpText,
   rows = 4,
+  size = "md",
+  ...props
 }) => {
-  const textareaClasses = ['form-textarea', error && 'error'].filter(Boolean).join(' ');
-  const helperClasses = ['form-helper-text', error && 'error'].filter(Boolean).join(' ');
-
   return (
-    <div className="form-group">
+    <div className={formGroupVariants()}>
       {label && (
-        <label className="form-label">
+        <label className={formLabelVariants()}>
           {label}
-          {required && <span style={{ color: '#d32f2f' }}>*</span>}
+          {required && <span style={{ color: "#d32f2f" }}>*</span>}
         </label>
       )}
 
@@ -46,11 +72,12 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
         required={required}
         disabled={disabled}
         rows={rows}
-        className={textareaClasses}
+        className={formTextareaVariants({ error: !!error, size, className })}
+        {...props}
       />
 
-      {error && <span className={helperClasses}>{error}</span>}
-      {helpText && !error && <span className="form-helper-text">{helpText}</span>}
+      {error && <span className={formHelperTextVariants({ error: true })}>{error}</span>}
+      {helpText && !error && <span className={formHelperTextVariants()}>{helpText}</span>}
     </div>
   );
 };
