@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@variant dark (.dark &);
+
 @theme {
   /* 디자인 토큰 - 추후 확장 가능 */
   --color-primary: #0f172a;
@@ -90,6 +92,21 @@
 
   /* Z-index 토큰 */
   --z-index-modal: 1000;
+
+  /* Background 토큰 */
+  --color-bg-primary: #f9fafb;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f3f4f6;
+
+  /* Border 토큰 */
+  --color-border-primary: #d1d5db;
+  --color-border-secondary: #e5e7eb;
+  --color-border-tertiary: #9ca3af;
+
+  /* Text 토큰 - 추가 */
+  --color-text-heading: #1f2937;
+  --color-text-body: #4b5563;
+  --color-text-muted: #6b7280;
 }
 
 @theme inline {
@@ -149,6 +166,55 @@
   --chart-5: oklch(0.769 0.188 70.08);
 }
 
+.dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.95 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.25 0 0);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.25 0 0);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.3 0 0);
+  --ring: oklch(0.4 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* Dark mode overrides */
+  --color-bg-primary: #1f2937;
+  --color-bg-secondary: #111827;
+  --color-bg-tertiary: #374151;
+
+  --color-border-primary: #4b5563;
+  --color-border-secondary: #374151;
+  --color-border-tertiary: #6b7280;
+
+  --color-text-heading: #f9fafb;
+  --color-text-body: #e5e7eb;
+  --color-text-muted: #9ca3af;
+
+  --color-modal-bg: #1f2937;
+  --color-table-header-bg: #374151;
+  --color-table-row-hover: #374151;
+  --color-table-striped: #1f2937;
+  --color-table-border: #4b5563;
+
+  --color-form-bg: #374151;
+  --color-form-border: #4b5563;
+  --color-form-text: #f9fafb;
+}
+
 @layer base {
   * {
     margin: 0;
@@ -187,7 +253,7 @@
     text-align: left;
     font-weight: 500;
     font-size: var(--font-size-xs);
-    color: var(--color-form-placeholder);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
     border-bottom: 2px solid var(--color-table-border);
@@ -195,7 +261,7 @@
 
   .table td {
     padding: var(--spacing-md);
-    color: var(--color-form-text);
+    color: var(--color-text-body);
     border-bottom: 1px solid var(--color-table-border);
   }
 
@@ -203,7 +269,7 @@
     border-bottom: none;
   }
 
-  .table-striped tbody tr:nth-child(even) {
+  .table-striped tbody tr:nth-child(odd) {
     background-color: var(--color-table-striped);
   }
 
@@ -225,6 +291,8 @@
     border: 1px solid var(--color-form-border);
     border-radius: var(--radius-md);
     width: 300px;
+    background-color: var(--color-form-bg);
+    color: var(--color-form-text);
   }
 
   .table-pagination {
@@ -241,6 +309,7 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    color: var(--color-text-body);
   }
 
   .table-pagination-button:hover:not(.disabled) {

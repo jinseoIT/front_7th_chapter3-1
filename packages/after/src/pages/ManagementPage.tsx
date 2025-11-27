@@ -196,36 +196,49 @@ export const ManagementPage: React.FC = () => {
   const currentError = entityType === 'user' ? userManagement.error : postManagement.error;
 
   return (
-    <div className="min-h-screen bg-gray-200">
+    <div className="min-h-screen transition-colors" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
       <div className="max-w-[1200px] mx-auto p-5">
         <div className="mb-5">
-          <h1 className="text-2xl font-bold mb-1 text-gray-800">
+          <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--color-text-heading)' }}>
             관리 시스템
           </h1>
-          <p className="text-gray-600 text-sm">
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
             사용자와 게시글을 관리하세요
           </p>
         </div>
 
-        <div className="bg-white border border-gray-300 p-2.5">
-          <div className="mb-4 border-b-2 border-gray-400 pb-1">
+        <div className="p-2.5 transition-colors" style={{
+          backgroundColor: 'var(--color-modal-bg)',
+          border: '1px solid var(--color-border-secondary)'
+        }}>
+          <div className="mb-4 pb-1" style={{ borderBottom: '2px solid var(--color-border-tertiary)' }}>
             <button
               onClick={() => setEntityType('post')}
-              className={`px-4 py-2 mr-1 text-sm border border-gray-600 rounded cursor-pointer ${
+              className={`px-4 py-2 mr-1 text-sm rounded cursor-pointer transition-colors ${
                 entityType === 'post'
-                  ? 'font-bold bg-blue-600 text-white'
-                  : 'font-normal bg-gray-100 text-gray-800'
+                  ? 'font-bold bg-blue-600 text-white border border-blue-600'
+                  : 'font-normal'
               }`}
+              style={entityType !== 'post' ? {
+                backgroundColor: 'var(--color-bg-tertiary)',
+                color: 'var(--color-text-body)',
+                border: '1px solid var(--color-border-tertiary)'
+              } : {}}
             >
               게시글
             </button>
             <button
               onClick={() => setEntityType('user')}
-              className={`px-4 py-2 text-sm border border-gray-600 rounded cursor-pointer ${
+              className={`px-4 py-2 text-sm rounded cursor-pointer transition-colors ${
                 entityType === 'user'
-                  ? 'font-bold bg-blue-600 text-white'
-                  : 'font-normal bg-gray-100 text-gray-800'
+                  ? 'font-bold bg-blue-600 text-white border border-blue-600'
+                  : 'font-normal'
               }`}
+              style={entityType !== 'user' ? {
+                backgroundColor: 'var(--color-bg-tertiary)',
+                color: 'var(--color-text-body)',
+                border: '1px solid var(--color-border-tertiary)'
+              } : {}}
             >
               사용자
             </button>
@@ -272,7 +285,10 @@ export const ManagementPage: React.FC = () => {
               <PostStats {...postStats} />
             )}
 
-            <div className="border border-gray-300 bg-white overflow-auto">
+            <div className="overflow-auto transition-colors" style={{
+              border: '1px solid var(--color-table-border)',
+              backgroundColor: 'var(--color-modal-bg)'
+            }}>
               {entityType === 'user' ? (
                 <Table
                   columns={userColumns}

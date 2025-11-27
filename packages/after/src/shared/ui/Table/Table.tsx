@@ -9,39 +9,39 @@ export interface Column<T = Record<string, unknown>> {
   render?: (value: unknown, row: T) => React.ReactNode;
 }
 
-const tableContainerVariants = cva("w-full overflow-x-auto");
+const tableContainerVariants = cva("table-container");
 
 const tableVariants = cva(
-  "w-full border-collapse text-sm text-left",
+  "table",
   {
     variants: {
       striped: {
-        true: "[&_tbody_tr:nth-child(odd)]:bg-gray-50",
+        true: "table-striped",
       },
       bordered: {
-        true: "border border-gray-200",
+        true: "table-bordered",
       },
       hover: {
-        true: "[&_tbody_tr:hover]:bg-gray-100",
+        true: "table-hover",
       },
     },
   }
 );
 
 const searchInputVariants = cva(
-  "w-full max-w-sm px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+  "table-search-input w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 );
 
 const paginationContainerVariants = cva(
-  "flex items-center justify-center gap-2 mt-4 py-3"
+  "table-pagination"
 );
 
 const paginationButtonVariants = cva(
-  "px-4 py-2 text-sm font-medium rounded-md transition-colors",
+  "table-pagination-button",
   {
     variants: {
       disabled: {
-        true: "bg-gray-100 text-gray-400 cursor-not-allowed",
+        true: "disabled",
         false: "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer",
       },
     },
@@ -151,18 +151,17 @@ export const Table = <T extends Record<string, unknown> = Record<string, unknown
       )}
 
       <table className={tableVariants({ striped, bordered, hover, className })}>
-        <thead className="bg-gray-100 border-b-2 border-gray-300">
+        <thead>
           <tr>
             {actualColumns.map((column) => (
               <th
                 key={column.key}
                 style={column.width ? { width: column.width } : undefined}
                 onClick={() => sortable && column.sortable !== false && handleSort(column.key)}
-                className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
               >
                 <div
                   className={`flex items-center gap-1 ${
-                    sortable && column.sortable !== false ? "cursor-pointer select-none hover:text-gray-900" : "cursor-default"
+                    sortable && column.sortable !== false ? "cursor-pointer select-none" : "cursor-default"
                   }`}
                 >
                   {column.header}
@@ -174,15 +173,15 @@ export const Table = <T extends Record<string, unknown> = Record<string, unknown
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody>
           {paginatedData.map((row, rowIndex) => (
             <tr
               key={rowIndex}
               onClick={() => onRowClick?.(row)}
-              className={onRowClick ? "cursor-pointer transition-colors" : "cursor-default"}
+              className={onRowClick ? "cursor-pointer transition-colors" : ""}
             >
               {actualColumns.map((column) => (
-                <td key={column.key} className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
+                <td key={column.key} className="whitespace-nowrap">
                   {renderCell(row, column)}
                 </td>
               ))}
@@ -192,7 +191,7 @@ export const Table = <T extends Record<string, unknown> = Record<string, unknown
       </table>
 
       {paginatedData.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
           데이터가 없습니다.
         </div>
       )}
@@ -206,7 +205,7 @@ export const Table = <T extends Record<string, unknown> = Record<string, unknown
           >
             이전
           </button>
-          <span className="py-1.5 px-3 text-sm text-gray-700">
+          <span className="py-1.5 px-3 text-sm" style={{ color: 'var(--color-text-body)' }}>
             {currentPage} / {totalPages}
           </span>
           <button
