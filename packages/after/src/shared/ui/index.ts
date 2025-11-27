@@ -8,3 +8,4 @@ export { Table } from "./Table";
 export { FormInput } from "./FormInput";
 export { FormSelect } from "./FormSelect";
 export { FormTextarea } from "./FormTextarea";
+export { ThemeToggle } from "./ThemeToggle";
