@@ -1,30 +1,45 @@
 import React, { useEffect } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const modalOverlayVariants = cva("modal-overlay");
+const modalOverlayVariants = cva(
+  "fixed top-0 left-0 right-0 bottom-0 bg-modal-overlay flex items-center justify-center z-[1000] p-4"
+);
 
-const modalContentVariants = cva("modal-content", {
-  variants: {
-    size: {
-      small: "modal-small",
-      medium: "modal-medium",
-      large: "modal-large",
+const modalContentVariants = cva(
+  "bg-modal-bg rounded-md shadow-xl max-h-[90vh] flex flex-col",
+  {
+    variants: {
+      size: {
+        small: "w-full max-w-md",
+        medium: "w-full max-w-2xl",
+        large: "w-full max-w-4xl",
+      },
     },
-  },
-  defaultVariants: {
-    size: "medium",
-  },
-});
+    defaultVariants: {
+      size: "medium",
+    },
+  }
+);
 
-const modalHeaderVariants = cva("modal-header");
+const modalHeaderVariants = cva(
+  "p-4 px-6 border-b border-modal-header-border flex justify-between items-center"
+);
 
-const modalTitleVariants = cva("modal-title");
+const modalTitleVariants = cva(
+  "m-0 text-xl font-medium text-form-text"
+);
 
-const modalCloseVariants = cva("modal-close");
+const modalCloseVariants = cva(
+  "bg-transparent border-none text-[28px] leading-none text-form-placeholder cursor-pointer p-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150 hover:bg-form-bg-disabled"
+);
 
-const modalBodyVariants = cva("modal-body");
+const modalBodyVariants = cva(
+  "p-6 overflow-y-auto flex-1"
+);
 
-const modalFooterVariants = cva("modal-footer");
+const modalFooterVariants = cva(
+  "p-4 px-6 border-t border-modal-footer-border flex gap-2 justify-end"
+);
 
 export interface ModalProps extends VariantProps<typeof modalContentVariants> {
   isOpen: boolean;

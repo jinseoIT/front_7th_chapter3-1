@@ -13,64 +13,72 @@ describe('Button 컴포넌트', () => {
     it('기본 variant(primary)로 렌더링한다', () => {
       render(<Button>Test</Button>);
       const button = screen.getByRole('button');
-      expect(button).toHaveClass('btn-primary');
+      expect(button).toHaveClass('bg-btn-primary');
     });
 
     it('기본 크기(md)로 렌더링한다', () => {
       render(<Button>Test</Button>);
       const button = screen.getByRole('button');
-      expect(button).toHaveClass('btn-md');
+      expect(button).toHaveClass('px-6');
+      expect(button).toHaveClass('py-2');
+      expect(button).toHaveClass('text-base');
     });
   });
 
   describe('Variant', () => {
     it('primary variant를 렌더링한다', () => {
       render(<Button variant="primary">Primary</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-primary');
+      expect(screen.getByRole('button')).toHaveClass('bg-btn-primary');
     });
 
     it('secondary variant를 렌더링한다', () => {
       render(<Button variant="secondary">Secondary</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-secondary');
+      expect(screen.getByRole('button')).toHaveClass('bg-btn-secondary');
     });
 
     it('danger variant를 렌더링한다', () => {
       render(<Button variant="danger">Danger</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-danger');
+      expect(screen.getByRole('button')).toHaveClass('bg-btn-danger');
     });
 
     it('success variant를 렌더링한다', () => {
       render(<Button variant="success">Success</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-success');
+      expect(screen.getByRole('button')).toHaveClass('bg-btn-success');
     });
   });
 
   describe('크기', () => {
     it('small 크기를 렌더링한다', () => {
       render(<Button size="sm">Small</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-sm');
+      const button = screen.getByRole('button');
+      expect(button).toHaveClass('px-4');
+      expect(button).toHaveClass('text-sm');
     });
 
     it('medium 크기를 렌더링한다', () => {
       render(<Button size="md">Medium</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-md');
+      const button = screen.getByRole('button');
+      expect(button).toHaveClass('px-6');
+      expect(button).toHaveClass('text-base');
     });
 
     it('large 크기를 렌더링한다', () => {
       render(<Button size="lg">Large</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-lg');
+      const button = screen.getByRole('button');
+      expect(button).toHaveClass('px-8');
+      expect(button).toHaveClass('text-lg');
     });
   });
 
   describe('전체 너비', () => {
     it('전체 너비 버튼을 렌더링한다', () => {
       render(<Button fullWidth>Full Width</Button>);
-      expect(screen.getByRole('button')).toHaveClass('btn-fullwidth');
+      expect(screen.getByRole('button')).toHaveClass('w-full');
     });
 
     it('기본적으로 전체 너비를 렌더링하지 않는다', () => {
       render(<Button>Normal</Button>);
-      expect(screen.getByRole('button')).not.toHaveClass('btn-fullwidth');
+      expect(screen.getByRole('button')).not.toHaveClass('w-full');
     });
   });
 
@@ -140,10 +148,10 @@ describe('Button 컴포넌트', () => {
         </Button>
       );
       const button = screen.getByRole('button');
-      expect(button).toHaveClass('btn');
-      expect(button).toHaveClass('btn-primary');
-      expect(button).toHaveClass('btn-lg');
-      expect(button).toHaveClass('btn-fullwidth');
+      expect(button).toHaveClass('bg-btn-primary');
+      expect(button).toHaveClass('px-8');
+      expect(button).toHaveClass('text-lg');
+      expect(button).toHaveClass('w-full');
     });
   });
 });

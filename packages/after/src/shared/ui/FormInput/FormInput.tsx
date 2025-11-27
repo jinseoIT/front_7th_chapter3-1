@@ -97,13 +97,24 @@ export const FormInput: React.FC<FormInputProps> = ({
   };
 
   const displayError = error || internalError;
-  const inputClasses = ['form-input', displayError && 'error', `input-width-${width}`].filter(Boolean).join(' ');
-  const helperClasses = ['form-helper-text', displayError && 'error'].filter(Boolean).join(' ');
+
+  const widthClass = width === 'full' ? 'w-full' : 'w-full';
+  const inputClasses = [
+    'w-full px-2 py-2 text-base border rounded-sm bg-white box-border transition-colors duration-200 focus:outline-none',
+    displayError ? 'border-form-border-error' : 'border-form-border focus:border-form-border-focus',
+    disabled && 'bg-form-bg-disabled cursor-not-allowed',
+    widthClass
+  ].filter(Boolean).join(' ');
+
+  const helperClasses = [
+    'text-xs mt-1 block',
+    displayError ? 'text-form-border-error' : 'text-form-placeholder'
+  ].filter(Boolean).join(' ');
 
   return (
-    <div className="form-group">
+    <div className="mb-4">
       {label && (
-        <label htmlFor={name} className="form-label">
+        <label htmlFor={name} className="block mb-2 text-sm font-bold text-form-text">
           {label}
           {required && <span className="text-red-700">*</span>}
         </label>
@@ -122,7 +133,7 @@ export const FormInput: React.FC<FormInputProps> = ({
       />
 
       {displayError && <span className={helperClasses}>{displayError}</span>}
-      {helpText && !displayError && <span className="form-helper-text">{helpText}</span>}
+      {helpText && !displayError && <span className={helperClasses}>{helpText}</span>}
     </div>
   );
 };

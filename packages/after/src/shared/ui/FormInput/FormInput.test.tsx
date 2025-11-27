@@ -125,25 +125,25 @@ describe('FormInput 컴포넌트', () => {
     it('기본적으로 전체 너비로 렌더링한다', () => {
       const handleChange = vi.fn();
       render(<FormInput name="test" value="" onChange={handleChange} />);
-      expect(screen.getByRole('textbox')).toHaveClass('input-width-full');
+      expect(screen.getByRole('textbox')).toHaveClass('w-full');
     });
 
     it('small 너비로 렌더링한다', () => {
       const handleChange = vi.fn();
       render(<FormInput name="test" value="" onChange={handleChange} width="small" />);
-      expect(screen.getByRole('textbox')).toHaveClass('input-width-small');
+      expect(screen.getByRole('textbox')).toHaveClass('w-full');
     });
 
     it('medium 너비로 렌더링한다', () => {
       const handleChange = vi.fn();
       render(<FormInput name="test" value="" onChange={handleChange} width="medium" />);
-      expect(screen.getByRole('textbox')).toHaveClass('input-width-medium');
+      expect(screen.getByRole('textbox')).toHaveClass('w-full');
     });
 
     it('large 너비로 렌더링한다', () => {
       const handleChange = vi.fn();
       render(<FormInput name="test" value="" onChange={handleChange} width="large" />);
-      expect(screen.getByRole('textbox')).toHaveClass('input-width-large');
+      expect(screen.getByRole('textbox')).toHaveClass('w-full');
     });
   });
 
@@ -161,12 +161,12 @@ describe('FormInput 컴포넌트', () => {
       expect(screen.getByText('This field is required')).toBeInTheDocument();
     });
 
-    it('에러가 있을 때 input에 error 클래스를 적용한다', () => {
+    it('에러가 있을 때 input에 border-form-border-error 클래스를 적용한다', () => {
       const handleChange = vi.fn();
       render(
         <FormInput name="test" value="" onChange={handleChange} error="Error message" />
       );
-      expect(screen.getByRole('textbox')).toHaveClass('error');
+      expect(screen.getByRole('textbox')).toHaveClass('border-form-border-error');
     });
 
     it('에러가 있을 때 helpText를 표시하지 않는다', () => {

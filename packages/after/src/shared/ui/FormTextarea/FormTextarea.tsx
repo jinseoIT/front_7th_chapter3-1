@@ -1,31 +1,40 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const formTextareaVariants = cva("form-textarea", {
+const formTextareaVariants = cva(
+  "w-full min-h-[6em] border rounded-md bg-white box-border transition-colors duration-200 focus:outline-none resize-vertical text-form-text font-normal leading-6",
+  {
+    variants: {
+      error: {
+        true: "border-form-border-error",
+        false: "border-form-border focus:border-form-border-focus focus:border-2 focus:p-[calc(1rem-1px)]",
+      },
+      size: {
+        sm: "p-2 text-sm",
+        md: "p-4 text-base",
+        lg: "p-6 text-lg",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+      error: false,
+    },
+  }
+);
+
+const formGroupVariants = cva("mb-4");
+
+const formLabelVariants = cva("block mb-2 text-sm font-bold text-form-text");
+
+const formHelperTextVariants = cva("text-xs mt-1 block", {
   variants: {
     error: {
-      true: "error",
-    },
-    size: {
-      sm: "form-textarea-sm",
-      md: "form-textarea-md",
-      lg: "form-textarea-lg",
+      true: "text-form-border-error",
+      false: "text-form-placeholder",
     },
   },
   defaultVariants: {
-    size: "md",
-  },
-});
-
-const formGroupVariants = cva("form-group");
-
-const formLabelVariants = cva("form-label");
-
-const formHelperTextVariants = cva("form-helper-text", {
-  variants: {
-    error: {
-      true: "error",
-    },
+    error: false,
   },
 });
 

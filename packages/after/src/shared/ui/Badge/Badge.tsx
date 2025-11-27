@@ -1,30 +1,33 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const badgeVariants = cva("badge", {
-  variants: {
-    variant: {
-      primary: "badge-primary",
-      secondary: "badge-secondary",
-      success: "badge-success",
-      danger: "badge-danger",
-      warning: "badge-warning",
-      info: "badge-info",
+const badgeVariants = cva(
+  "inline-flex items-center justify-center font-bold leading-none whitespace-nowrap rounded-sm",
+  {
+    variants: {
+      variant: {
+        primary: "bg-badge-primary text-white",
+        secondary: "bg-badge-secondary text-white",
+        success: "bg-badge-success text-white",
+        danger: "bg-badge-danger text-white",
+        warning: "bg-badge-warning text-white",
+        info: "bg-badge-info text-white",
+      },
+      size: {
+        small: "h-4 px-1 text-xs",
+        medium: "h-5 px-2 text-sm",
+        large: "h-6 px-2 text-base",
+      },
+      pill: {
+        true: "rounded-full",
+      },
     },
-    size: {
-      small: "badge-small",
-      medium: "badge-medium",
-      large: "badge-large",
+    defaultVariants: {
+      variant: "primary",
+      size: "medium",
     },
-    pill: {
-      true: "badge-pill",
-    },
-  },
-  defaultVariants: {
-    variant: "primary",
-    size: "medium",
-  },
-});
+  }
+);
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,

@@ -6,31 +6,40 @@ interface Option {
   label: string;
 }
 
-const formSelectVariants = cva("form-select", {
+const formSelectVariants = cva(
+  "w-full border rounded-sm bg-white box-border transition-colors duration-200 focus:outline-none text-form-text",
+  {
+    variants: {
+      error: {
+        true: "border-form-border-error",
+        false: "border-form-border focus:border-form-border-focus",
+      },
+      size: {
+        sm: "px-2 py-2 text-sm",
+        md: "px-2 py-2 text-base",
+        lg: "px-4 py-4 text-lg",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+      error: false,
+    },
+  }
+);
+
+const formGroupVariants = cva("mb-4");
+
+const formLabelVariants = cva("block mb-2 text-sm font-bold text-form-text");
+
+const formHelperTextVariants = cva("text-xs mt-1 block", {
   variants: {
     error: {
-      true: "error",
-    },
-    size: {
-      sm: "form-select-sm",
-      md: "form-select-md",
-      lg: "form-select-lg",
+      true: "text-form-border-error",
+      false: "text-form-placeholder",
     },
   },
   defaultVariants: {
-    size: "md",
-  },
-});
-
-const formGroupVariants = cva("form-group");
-
-const formLabelVariants = cva("form-label");
-
-const formHelperTextVariants = cva("form-helper-text", {
-  variants: {
-    error: {
-      true: "error",
-    },
+    error: false,
   },
 });
 
