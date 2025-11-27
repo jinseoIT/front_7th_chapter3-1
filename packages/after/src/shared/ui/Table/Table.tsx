@@ -141,7 +141,7 @@ export const Table: React.FC<TableProps> = ({
       }
       if (columnKey === "actions") {
         return (
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div className="flex gap-2">
             <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
               수정
             </ButtonCustom>
@@ -177,7 +177,7 @@ export const Table: React.FC<TableProps> = ({
       }
       if (columnKey === "actions") {
         return (
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div className="flex gap-2 flex-wrap">
             <ButtonCustom size="sm" variant="primary" onClick={() => onEdit?.(row)}>
               수정
             </ButtonCustom>
@@ -215,19 +215,13 @@ export const Table: React.FC<TableProps> = ({
   return (
     <div className={tableContainerVariants()}>
       {searchable && (
-        <div style={{ marginBottom: "16px" }}>
+        <div className="mb-4">
           <input
             type="text"
             placeholder="검색..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={searchInputVariants()}
-            style={{
-              padding: "8px 12px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              width: "300px",
-            }}
+            className={`${searchInputVariants()} p-2 px-3 border border-gray-300 rounded w-[300px]`}
           />
         </div>
       )}
@@ -242,12 +236,7 @@ export const Table: React.FC<TableProps> = ({
                 onClick={() => sortable && handleSort(column.key)}
               >
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                    cursor: sortable ? "pointer" : "default",
-                  }}
+                  className={`flex items-center gap-1 ${sortable ? "cursor-pointer" : "cursor-default"}`}
                 >
                   {column.header}
                   {sortable && sortColumn === column.key && <span>{sortDirection === "asc" ? "↑" : "↓"}</span>}
@@ -258,7 +247,7 @@ export const Table: React.FC<TableProps> = ({
         </thead>
         <tbody>
           {paginatedData.map((row, rowIndex) => (
-            <tr key={rowIndex} onClick={() => onRowClick?.(row)} style={{ cursor: onRowClick ? "pointer" : "default" }}>
+            <tr key={rowIndex} onClick={() => onRowClick?.(row)} className={onRowClick ? "cursor-pointer" : "cursor-default"}>
               {actualColumns.map((column) => (
                 <td key={column.key}>{entityType ? renderCell(row, column.key) : row[column.key]}</td>
               ))}
@@ -276,7 +265,7 @@ export const Table: React.FC<TableProps> = ({
           >
             이전
           </button>
-          <span style={{ padding: "6px 12px" }}>
+          <span className="py-1.5 px-3">
             {currentPage} / {totalPages}
           </span>
           <button

@@ -10,60 +10,30 @@ interface PostStatsProps {
 
 export const PostStats: React.FC<PostStatsProps> = ({ total, published, draft, archived, totalViews }) => {
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-      gap: '10px',
-      marginBottom: '15px'
-    }}>
-      <div style={{
-        padding: '12px 15px',
-        background: '#e3f2fd',
-        border: '1px solid #90caf9',
-        borderRadius: '3px'
-      }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>전체</div>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{total}</div>
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(130px,1fr))] gap-2.5 mb-4">
+      <div className="py-3 px-4 bg-blue-50 border border-blue-300 rounded">
+        <div className="text-xs text-gray-600 mb-1">전체</div>
+        <div className="text-2xl font-bold text-blue-700">{total}</div>
       </div>
 
-      <div style={{
-        padding: '12px 15px',
-        background: '#e8f5e9',
-        border: '1px solid #81c784',
-        borderRadius: '3px'
-      }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>게시됨</div>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#388e3c' }}>{published}</div>
+      <div className="py-3 px-4 bg-green-50 border border-green-300 rounded">
+        <div className="text-xs text-gray-600 mb-1">게시됨</div>
+        <div className="text-2xl font-bold text-green-700">{published}</div>
       </div>
 
-      <div style={{
-        padding: '12px 15px',
-        background: '#fff3e0',
-        border: '1px solid #ffb74d',
-        borderRadius: '3px'
-      }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>임시저장</div>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f57c00' }}>{draft}</div>
+      <div className="py-3 px-4 bg-orange-50 border border-orange-300 rounded">
+        <div className="text-xs text-gray-600 mb-1">임시저장</div>
+        <div className="text-2xl font-bold text-orange-700">{draft}</div>
       </div>
 
-      <div style={{
-        padding: '12px 15px',
-        background: '#ffebee',
-        border: '1px solid #e57373',
-        borderRadius: '3px'
-      }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>보관됨</div>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.6)' }}>{archived}</div>
+      <div className="py-3 px-4 bg-red-50 border border-red-300 rounded">
+        <div className="text-xs text-gray-600 mb-1">보관됨</div>
+        <div className="text-2xl font-bold text-gray-600">{archived}</div>
       </div>
 
-      <div style={{
-        padding: '12px 15px',
-        background: '#f5f5f5',
-        border: '1px solid #bdbdbd',
-        borderRadius: '3px'
-      }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>총 조회수</div>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#424242' }}>{totalViews}</div>
+      <div className="py-3 px-4 bg-gray-100 border border-gray-400 rounded">
+        <div className="text-xs text-gray-600 mb-1">총 조회수</div>
+        <div className="text-2xl font-bold text-gray-700">{totalViews}</div>
       </div>
     </div>
   );

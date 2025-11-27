@@ -60,7 +60,7 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
       {label && (
         <label className={formLabelVariants()}>
           {label}
-          {required && <span style={{ color: "#d32f2f" }}>*</span>}
+          {required && <span className="text-red-700">*</span>}
         </label>
       )}
 

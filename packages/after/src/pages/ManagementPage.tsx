@@ -200,67 +200,43 @@ export const ManagementPage: React.FC = () => {
   const currentError = entityType === 'user' ? userManagement.error : postManagement.error;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f0f0f0' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-        <div style={{ marginBottom: '20px' }}>
-          <h1 style={{
-            fontSize: '24px',
-            fontWeight: 'bold',
-            marginBottom: '5px',
-            color: '#333'
-          }}>
+    <div className="min-h-screen bg-gray-200">
+      <div className="max-w-[1200px] mx-auto p-5">
+        <div className="mb-5">
+          <h1 className="text-2xl font-bold mb-1 text-gray-800">
             관리 시스템
           </h1>
-          <p style={{ color: '#666', fontSize: '14px' }}>
+          <p className="text-gray-600 text-sm">
             사용자와 게시글을 관리하세요
           </p>
         </div>
 
-        <div style={{
-          background: 'white',
-          border: '1px solid #ddd',
-          padding: '10px'
-        }}>
-          <div style={{
-            marginBottom: '15px',
-            borderBottom: '2px solid #ccc',
-            paddingBottom: '5px'
-          }}>
+        <div className="bg-white border border-gray-300 p-2.5">
+          <div className="mb-4 border-b-2 border-gray-400 pb-1">
             <button
               onClick={() => setEntityType('post')}
-              style={{
-                padding: '8px 16px',
-                marginRight: '5px',
-                fontSize: '14px',
-                fontWeight: entityType === 'post' ? 'bold' : 'normal',
-                border: '1px solid #999',
-                background: entityType === 'post' ? '#1976d2' : '#f5f5f5',
-                color: entityType === 'post' ? 'white' : '#333',
-                cursor: 'pointer',
-                borderRadius: '3px'
-              }}
+              className={`px-4 py-2 mr-1 text-sm border border-gray-600 rounded cursor-pointer ${
+                entityType === 'post'
+                  ? 'font-bold bg-blue-600 text-white'
+                  : 'font-normal bg-gray-100 text-gray-800'
+              }`}
             >
               게시글
             </button>
             <button
               onClick={() => setEntityType('user')}
-              style={{
-                padding: '8px 16px',
-                fontSize: '14px',
-                fontWeight: entityType === 'user' ? 'bold' : 'normal',
-                border: '1px solid #999',
-                background: entityType === 'user' ? '#1976d2' : '#f5f5f5',
-                color: entityType === 'user' ? 'white' : '#333',
-                cursor: 'pointer',
-                borderRadius: '3px'
-              }}
+              className={`px-4 py-2 text-sm border border-gray-600 rounded cursor-pointer ${
+                entityType === 'user'
+                  ? 'font-bold bg-blue-600 text-white'
+                  : 'font-normal bg-gray-100 text-gray-800'
+              }`}
             >
               사용자
             </button>
           </div>
 
           <div>
-            <div style={{ marginBottom: '15px', textAlign: 'right' }}>
+            <div className="mb-4 text-right">
               <Button
                 variant="primary"
                 size="md"
@@ -271,7 +247,7 @@ export const ManagementPage: React.FC = () => {
             </div>
 
             {showSuccessAlert && (
-              <div style={{ marginBottom: '10px' }}>
+              <div className="mb-2.5">
                 <Alert
                   variant="success"
                   title="성공"
@@ -283,7 +259,7 @@ export const ManagementPage: React.FC = () => {
             )}
 
             {showErrorAlert && (
-              <div style={{ marginBottom: '10px' }}>
+              <div className="mb-2.5">
                 <Alert
                   variant="error"
                   title="오류"
@@ -300,7 +276,7 @@ export const ManagementPage: React.FC = () => {
               <PostStats {...postStats} />
             )}
 
-            <div style={{ border: '1px solid #ddd', background: 'white', overflow: 'auto' }}>
+            <div className="border border-gray-300 bg-white overflow-auto">
               <Table
                 columns={renderTableColumns()}
                 data={entityType === 'user' ? userManagement.users : postManagement.posts}

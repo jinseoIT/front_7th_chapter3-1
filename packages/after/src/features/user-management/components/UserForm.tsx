@@ -31,7 +31,7 @@ export const UserForm: React.FC<UserFormProps> = ({ formData, onChange }) => {
         width="full"
         fieldType="email"
       />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className="grid grid-cols-2 gap-4">
         <FormSelect
           name="role"
           value={formData.role || 'user'}
