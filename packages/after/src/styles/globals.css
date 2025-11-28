@@ -6,80 +6,159 @@
 @theme {
   --radius: 0.5rem;
 
-  /* Button 토큰 */
-  --color-btn-primary: #007bff;
-  --color-btn-secondary: #6c757d;
-  --color-btn-success: #28a745;
-  --color-btn-danger: #dc3545;
+  /* ==========================================
+     PRIMITIVE TOKENS - 원시 색상 팔레트
+     ========================================== */
 
-  /* Badge 토큰 */
-  --color-badge-primary: #007bff;
-  --color-badge-secondary: #6c757d;
-  --color-badge-success: #28a745;
-  --color-badge-danger: #dc3545;
-  --color-badge-warning: #ffc107;
-  --color-badge-info: #17a2b8;
+  /* Blue Scale */
+  --blue-50: #e3f2fd;
+  --blue-200: #90caf9;
+  --blue-300: #80bdff;
+  --blue-500: #007bff;
+  --blue-900: #0d47a1;
 
-  /* Form 토큰 */
-  --color-form-border: #ced4da;
-  --color-form-border-focus: #80bdff;
-  --color-form-border-error: #dc3545;
-  --color-form-bg: #ffffff;
-  --color-form-bg-disabled: #e9ecef;
-  --color-form-text: #495057;
-  --color-form-placeholder: #6c757d;
+  /* Gray Scale */
+  --gray-50: #f9fafb;
+  --gray-100: #f8f9fa;
+  --gray-200: #f5f5f5;
+  --gray-250: #f3f4f6;
+  --gray-300: #e9ecef;
+  --gray-350: #e5e7eb;
+  --gray-400: #dee2e6;
+  --gray-500: #ced4da;
+  --gray-550: #bdbdbd;
+  --gray-600: #9ca3af;
+  --gray-650: #6c757d;
+  --gray-700: #6b7280;
+  --gray-750: #495057;
+  --gray-800: #4b5563;
+  --gray-850: #424242;
+  --gray-900: #1f2937;
+  --gray-950: #111827;
 
-  /* Modal 토큰 */
-  --color-modal-overlay: rgba(0, 0, 0, 0.5);
-  --color-modal-bg: #ffffff;
-  --color-modal-header-border: #dee2e6;
-  --color-modal-footer-border: #dee2e6;
+  /* Green Scale */
+  --green-50: #e8f5e9;
+  --green-400: #81c784;
+  --green-600: #28a745;
+  --green-900: #1b5e20;
 
-  /* Table 토큰 */
-  --color-table-border: #dee2e6;
-  --color-table-header-bg: #f8f9fa;
-  --color-table-row-hover: #f5f5f5;
-  --color-table-striped: #f9f9f9;
+  /* Red Scale */
+  --red-50: #ffebee;
+  --red-400: #e57373;
+  --red-600: #dc3545;
+  --red-900: #b71c1c;
 
-  /* Spacing 토큰 */
+  /* Yellow/Orange Scale */
+  --yellow-500: #ffc107;
+  --orange-50: #fff3e0;
+  --orange-400: #ffb74d;
+  --orange-900: #e65100;
+
+  /* Cyan Scale */
+  --cyan-600: #17a2b8;
+
+  /* Other */
+  --white: #ffffff;
+  --black-alpha-50: rgba(0, 0, 0, 0.5);
+
+  /* Dark Mode Colors */
+  --dark-bg-primary: #374151;
+  --dark-bg-secondary: #1f2937;
+  --dark-bg-tertiary: #111827;
+  --dark-border: #4b5563;
+  --dark-text-primary: #f9fafb;
+  --dark-text-secondary: #e5e7eb;
+  --dark-text-muted: #9ca3af;
+
+  /* ==========================================
+     SEMANTIC TOKENS - 의미론적 토큰
+     ========================================== */
+
+  --color-primary: var(--blue-500);
+  --color-secondary: var(--gray-650);
+  --color-success: var(--green-600);
+  --color-danger: var(--red-600);
+  --color-warning: var(--yellow-500);
+  --color-info: var(--cyan-600);
+
+  /* ==========================================
+     COMPONENT TOKENS - 컴포넌트 토큰
+     ========================================== */
+
+  /* Button Tokens */
+  --color-btn-primary: var(--color-primary);
+  --color-btn-secondary: var(--color-secondary);
+  --color-btn-success: var(--color-success);
+  --color-btn-danger: var(--color-danger);
+
+  /* Badge Tokens */
+  --color-badge-primary: var(--color-primary);
+  --color-badge-secondary: var(--color-secondary);
+  --color-badge-success: var(--color-success);
+  --color-badge-danger: var(--color-danger);
+  --color-badge-warning: var(--color-warning);
+  --color-badge-info: var(--color-info);
+
+  /* Form Tokens */
+  --color-form-border: var(--gray-500);
+  --color-form-border-focus: var(--blue-300);
+  --color-form-border-error: var(--color-danger);
+  --color-form-bg: var(--white);
+  --color-form-bg-disabled: var(--gray-300);
+  --color-form-text: var(--gray-750);
+  --color-form-placeholder: var(--gray-650);
+
+  /* Modal Tokens */
+  --color-modal-overlay: var(--black-alpha-50);
+  --color-modal-bg: var(--white);
+  --color-modal-header-border: var(--gray-400);
+  --color-modal-footer-border: var(--gray-400);
+
+  /* Table Tokens */
+  --color-table-border: var(--gray-400);
+  --color-table-header-bg: var(--gray-100);
+  --color-table-row-hover: var(--gray-200);
+  --color-table-striped: var(--gray-200);
+
+  /* Alert Tokens */
+  --color-alert-info-bg: var(--blue-50);
+  --color-alert-info-border: var(--blue-200);
+  --color-alert-info-text: var(--blue-900);
+  --color-alert-success-bg: var(--green-50);
+  --color-alert-success-border: var(--green-400);
+  --color-alert-success-text: var(--green-900);
+  --color-alert-warning-bg: var(--orange-50);
+  --color-alert-warning-border: var(--orange-400);
+  --color-alert-warning-text: var(--orange-900);
+  --color-alert-error-bg: var(--red-50);
+  --color-alert-error-border: var(--red-400);
+  --color-alert-error-text: var(--red-900);
+  --color-alert-default-bg: var(--gray-200);
+  --color-alert-default-border: var(--gray-550);
+  --color-alert-default-text: var(--gray-850);
+
+  /* Background Tokens */
+  --color-bg-primary: var(--gray-50);
+  --color-bg-secondary: var(--white);
+  --color-bg-tertiary: var(--gray-250);
+
+  /* Border Tokens */
+  --color-border-primary: var(--gray-600);
+  --color-border-secondary: var(--gray-350);
+  --color-border-tertiary: var(--gray-600);
+
+  /* Text Tokens */
+  --color-text-heading: var(--gray-900);
+  --color-text-body: var(--gray-800);
+  --color-text-muted: var(--gray-700);
+
+  /* Spacing Tokens */
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
 
-  /* Font Size 토큰 */
+  /* Font Size Tokens */
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
-
-  /* Alert 토큰 */
-  --color-alert-info-bg: #e3f2fd;
-  --color-alert-info-border: #90caf9;
-  --color-alert-info-text: #0d47a1;
-  --color-alert-success-bg: #e8f5e9;
-  --color-alert-success-border: #81c784;
-  --color-alert-success-text: #1b5e20;
-  --color-alert-warning-bg: #fff3e0;
-  --color-alert-warning-border: #ffb74d;
-  --color-alert-warning-text: #e65100;
-  --color-alert-error-bg: #ffebee;
-  --color-alert-error-border: #e57373;
-  --color-alert-error-text: #b71c1c;
-  --color-alert-default-bg: #f5f5f5;
-  --color-alert-default-border: #bdbdbd;
-  --color-alert-default-text: #424242;
-
-  /* Background 토큰 */
-  --color-bg-primary: #f9fafb;
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #f3f4f6;
-
-  /* Border 토큰 */
-  --color-border-primary: #d1d5db;
-  --color-border-secondary: #e5e7eb;
-  --color-border-tertiary: #9ca3af;
-
-  /* Text 토큰 - 추가 */
-  --color-text-heading: #1f2937;
-  --color-text-body: #4b5563;
-  --color-text-muted: #6b7280;
 }
 
 @theme inline {
@@ -111,28 +190,28 @@
   --border: oklch(0.3 0 0);
   --ring: oklch(0.4 0 0);
 
-  /* Dark mode overrides */
-  --color-bg-primary: #1f2937;
-  --color-bg-secondary: #111827;
-  --color-bg-tertiary: #374151;
+  /* Dark mode overrides - using primitive tokens */
+  --color-bg-primary: var(--dark-bg-secondary);
+  --color-bg-secondary: var(--dark-bg-tertiary);
+  --color-bg-tertiary: var(--dark-bg-primary);
 
-  --color-border-primary: #4b5563;
-  --color-border-secondary: #374151;
-  --color-border-tertiary: #6b7280;
+  --color-border-primary: var(--dark-border);
+  --color-border-secondary: var(--dark-bg-primary);
+  --color-border-tertiary: var(--gray-700);
 
-  --color-text-heading: #f9fafb;
-  --color-text-body: #e5e7eb;
-  --color-text-muted: #9ca3af;
+  --color-text-heading: var(--dark-text-primary);
+  --color-text-body: var(--dark-text-secondary);
+  --color-text-muted: var(--dark-text-muted);
 
-  --color-modal-bg: #1f2937;
-  --color-table-header-bg: #374151;
-  --color-table-row-hover: #374151;
-  --color-table-striped: #1f2937;
-  --color-table-border: #4b5563;
+  --color-modal-bg: var(--dark-bg-secondary);
+  --color-table-header-bg: var(--dark-bg-primary);
+  --color-table-row-hover: var(--dark-bg-primary);
+  --color-table-striped: var(--dark-bg-secondary);
+  --color-table-border: var(--dark-border);
 
-  --color-form-bg: #374151;
-  --color-form-border: #4b5563;
-  --color-form-text: #f9fafb;
+  --color-form-bg: var(--dark-bg-primary);
+  --color-form-border: var(--dark-border);
+  --color-form-text: var(--dark-text-primary);
 }
 
 @layer base {
