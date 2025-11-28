@@ -146,7 +146,7 @@ describe('User Management Integration Tests', () => {
 
       // 에러 메시지 확인 (Alert 컴포넌트가 표시되어야 함)
       await waitFor(() => {
-        expect(screen.getByText(/Username already exists/i)).toBeInTheDocument();
+        expect(screen.getByText(/유저 이름이 이미 존재합니다/i)).toBeInTheDocument();
       });
     });
 
@@ -172,7 +172,7 @@ describe('User Management Integration Tests', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/Email already exists/i)).toBeInTheDocument();
+        expect(screen.getByText(/이메일이 이미 존재합니다/i)).toBeInTheDocument();
       });
     });
   });
@@ -294,13 +294,13 @@ describe('User Management Integration Tests', () => {
     it('존재하지 않는 사용자 수정 시 에러가 발생한다', async () => {
       await expect(
         userService.update(99999, { email: 'test@example.com' })
-      ).rejects.toThrow('User not found');
+      ).rejects.toThrow('유저를 찾을 수 없습니다.');
     });
 
     it('존재하지 않는 사용자 삭제 시 에러가 발생한다', async () => {
       await expect(
         userService.delete(99999)
-      ).rejects.toThrow('User not found');
+      ).rejects.toThrow('유저를 찾을 수 없습니다.');
     });
   });
 });

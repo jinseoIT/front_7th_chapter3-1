@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Button, Alert, Table, Modal } from '../shared/ui';
-import { useUserManagement, UserForm, UserStats, createUserTableColumns } from '../features/user-management';
-import { usePostManagement, PostForm, PostStats, createPostTableColumns } from '../features/post-management';
+import { useUserManagement, UserForm, UserStats, createUserTableColumns, type UserFormValues } from '../features/user-management';
+import { usePostManagement, PostForm, PostStats, createPostTableColumns, type PostFormValues } from '../features/post-management';
 import type { User } from '../features/user-management';
 import type { Post } from '../features/post-management';
 
@@ -16,6 +16,7 @@ export const ManagementPage: React.FC = () => {
   const [isUserCreateModalOpen, setIsUserCreateModalOpen] = useState(false);
   const [isUserEditModalOpen, setIsUserEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userServerError, setUserServerError] = useState<{ field?: keyof UserFormValues; message: string } | null>(null);
 
   // Post management
   const postManagement = usePostManagement();
@@ -23,6 +24,7 @@ export const ManagementPage: React.FC = () => {
   const [isPostCreateModalOpen, setIsPostCreateModalOpen] = useState(false);
   const [isPostEditModalOpen, setIsPostEditModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [postServerError, setPostServerError] = useState<{ field?: keyof PostFormValues; message: string } | null>(null);
 
   // Alert state
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -30,20 +32,35 @@ export const ManagementPage: React.FC = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   // User handlers
-  const handleUserCreate = async () => {
+  const handleUserCreate = async (data: UserFormValues) => {
     try {
+      setUserServerError(null); // 에러 초기화
       await userManagement.createUser({
-        username: userFormData.username,
-        email: userFormData.email,
-        role: userFormData.role || 'user',
-        status: userFormData.status || 'active',
+        username: data.username,
+        email: data.email,
+        role: data.role,
+        status: data.status,
       });
       setIsUserCreateModalOpen(false);
       setUserFormData({});
       setAlertMessage('사용자가 생성되었습니다');
       setShowSuccessAlert(true);
     } catch (error: any) {
-      setShowErrorAlert(true);
+      // 서버 에러 메시지에서 필드 추출
+      const errorMessage = error?.message || userManagement.error || '작업에 실패했습니다';
+      console.error('User creation error:', error, errorMessage);
+
+      const lowerMessage = errorMessage.toLowerCase();
+
+      // 에러 메시지에 따라 필드 지정
+      if (lowerMessage.includes('email') || lowerMessage.includes('이메일')) {
+        setUserServerError({ field: 'email', message: errorMessage });
+      } else if (lowerMessage.includes('username') || lowerMessage.includes('사용자명')) {
+        setUserServerError({ field: 'username', message: errorMessage });
+      } else {
+        // 필드를 특정할 수 없는 경우 username 필드에 표시 (첫 번째 필드)
+        setUserServerError({ field: 'username', message: errorMessage });
+      }
     }
   };
 
@@ -58,17 +75,37 @@ export const ManagementPage: React.FC = () => {
     setIsUserEditModalOpen(true);
   };
 
-  const handleUserUpdate = async () => {
+  const handleUserUpdate = async (data: UserFormValues) => {
     if (!selectedUser) return;
     try {
-      await userManagement.updateUser(selectedUser.id, userFormData);
+      setUserServerError(null); // 에러 초기화
+      await userManagement.updateUser(selectedUser.id, {
+        username: data.username,
+        email: data.email,
+        role: data.role,
+        status: data.status,
+      });
       setIsUserEditModalOpen(false);
       setUserFormData({});
       setSelectedUser(null);
       setAlertMessage('사용자가 수정되었습니다');
       setShowSuccessAlert(true);
     } catch (error: any) {
-      setShowErrorAlert(true);
+      // 서버 에러 메시지에서 필드 추출
+      const errorMessage = error?.message || userManagement.error || '작업에 실패했습니다';
+      console.error('User update error:', error, errorMessage);
+
+      const lowerMessage = errorMessage.toLowerCase();
+
+      // 에러 메시지에 따라 필드 지정
+      if (lowerMessage.includes('email') || lowerMessage.includes('이메일')) {
+        setUserServerError({ field: 'email', message: errorMessage });
+      } else if (lowerMessage.includes('username') || lowerMessage.includes('사용자명')) {
+        setUserServerError({ field: 'username', message: errorMessage });
+      } else {
+        // 필드를 특정할 수 없는 경우 username 필드에 표시 (첫 번째 필드)
+        setUserServerError({ field: 'username', message: errorMessage });
+      }
     }
   };
 
@@ -84,21 +121,39 @@ export const ManagementPage: React.FC = () => {
   };
 
   // Post handlers
-  const handlePostCreate = async () => {
+  const handlePostCreate = async (data: PostFormValues) => {
     try {
+      setPostServerError(null);
       await postManagement.createPost({
-        title: postFormData.title,
-        content: postFormData.content || '',
-        author: postFormData.author,
-        category: postFormData.category,
-        status: postFormData.status || 'draft',
+        title: data.title,
+        content: data.content,
+        author: data.author,
+        category: data.category,
+        status: data.status,
       });
       setIsPostCreateModalOpen(false);
       setPostFormData({});
       setAlertMessage('게시글이 생성되었습니다');
       setShowSuccessAlert(true);
     } catch (error: any) {
-      setShowErrorAlert(true);
+      const errorMessage = error?.message || postManagement.error || '작업에 실패했습니다';
+      console.error('Post creation error:', error, errorMessage);
+
+      const lowerMessage = errorMessage.toLowerCase();
+
+      // 에러 메시지에 따라 필드 지정
+      if (lowerMessage.includes('title') || lowerMessage.includes('제목')) {
+        setPostServerError({ field: 'title', message: errorMessage });
+      } else if (lowerMessage.includes('author') || lowerMessage.includes('작성자')) {
+        setPostServerError({ field: 'author', message: errorMessage });
+      } else if (lowerMessage.includes('category') || lowerMessage.includes('카테고리')) {
+        setPostServerError({ field: 'category', message: errorMessage });
+      } else if (lowerMessage.includes('content') || lowerMessage.includes('내용')) {
+        setPostServerError({ field: 'content', message: errorMessage });
+      } else {
+        // 필드를 특정할 수 없는 경우 title 필드에 표시 (첫 번째 필드)
+        setPostServerError({ field: 'title', message: errorMessage });
+      }
     }
   };
 
@@ -114,17 +169,41 @@ export const ManagementPage: React.FC = () => {
     setIsPostEditModalOpen(true);
   };
 
-  const handlePostUpdate = async () => {
+  const handlePostUpdate = async (data: PostFormValues) => {
     if (!selectedPost) return;
     try {
-      await postManagement.updatePost(selectedPost.id, postFormData);
+      setPostServerError(null);
+      await postManagement.updatePost(selectedPost.id, {
+        title: data.title,
+        content: data.content,
+        author: data.author,
+        category: data.category,
+        status: data.status,
+      });
       setIsPostEditModalOpen(false);
       setPostFormData({});
       setSelectedPost(null);
       setAlertMessage('게시글이 수정되었습니다');
       setShowSuccessAlert(true);
     } catch (error: any) {
-      setShowErrorAlert(true);
+      const errorMessage = error?.message || postManagement.error || '작업에 실패했습니다';
+      console.error('Post update error:', error, errorMessage);
+
+      const lowerMessage = errorMessage.toLowerCase();
+
+      // 에러 메시지에 따라 필드 지정
+      if (lowerMessage.includes('title') || lowerMessage.includes('제목')) {
+        setPostServerError({ field: 'title', message: errorMessage });
+      } else if (lowerMessage.includes('author') || lowerMessage.includes('작성자')) {
+        setPostServerError({ field: 'author', message: errorMessage });
+      } else if (lowerMessage.includes('category') || lowerMessage.includes('카테고리')) {
+        setPostServerError({ field: 'category', message: errorMessage });
+      } else if (lowerMessage.includes('content') || lowerMessage.includes('내용')) {
+        setPostServerError({ field: 'content', message: errorMessage });
+      } else {
+        // 필드를 특정할 수 없는 경우 title 필드에 표시 (첫 번째 필드)
+        setPostServerError({ field: 'title', message: errorMessage });
+      }
     }
   };
 
@@ -315,6 +394,7 @@ export const ManagementPage: React.FC = () => {
         onClose={() => {
           setIsUserCreateModalOpen(false);
           setUserFormData({});
+          setUserServerError(null);
         }}
         title="새 사용자 만들기"
         size="large"
@@ -324,16 +404,23 @@ export const ManagementPage: React.FC = () => {
             <Button variant="secondary" size="md" onClick={() => {
               setIsUserCreateModalOpen(false);
               setUserFormData({});
+              setUserServerError(null);
             }}>
               취소
             </Button>
-            <Button variant="primary" size="md" onClick={handleUserCreate}>
+            <Button variant="primary" size="md" type="submit" form="user-create-form">
               생성
             </Button>
           </>
         }
       >
-        <UserForm formData={userFormData} onChange={setUserFormData} />
+        <UserForm
+          key="user-create"
+          formData={userFormData}
+          onChange={setUserFormData}
+          onSubmit={handleUserCreate}
+          serverError={userServerError}
+        />
       </Modal>
 
       <Modal
@@ -342,6 +429,7 @@ export const ManagementPage: React.FC = () => {
           setIsUserEditModalOpen(false);
           setUserFormData({});
           setSelectedUser(null);
+          setUserServerError(null);
         }}
         title="사용자 수정"
         size="large"
@@ -352,10 +440,11 @@ export const ManagementPage: React.FC = () => {
               setIsUserEditModalOpen(false);
               setUserFormData({});
               setSelectedUser(null);
+              setUserServerError(null);
             }}>
               취소
             </Button>
-            <Button variant="primary" size="md" onClick={handleUserUpdate}>
+            <Button variant="primary" size="md" type="submit" form="user-create-form">
               수정 완료
             </Button>
           </>
@@ -367,7 +456,13 @@ export const ManagementPage: React.FC = () => {
               ID: {selectedUser.id} | 생성일: {selectedUser.createdAt}
             </Alert>
           )}
-          <UserForm formData={userFormData} onChange={setUserFormData} />
+          <UserForm
+            key={selectedUser?.id || "user-edit"}
+            formData={userFormData}
+            onChange={setUserFormData}
+            onSubmit={handleUserUpdate}
+            serverError={userServerError}
+          />
         </div>
       </Modal>
 
@@ -377,6 +472,7 @@ export const ManagementPage: React.FC = () => {
         onClose={() => {
           setIsPostCreateModalOpen(false);
           setPostFormData({});
+          setPostServerError(null);
         }}
         title="새 게시글 만들기"
         size="large"
@@ -386,16 +482,23 @@ export const ManagementPage: React.FC = () => {
             <Button variant="secondary" size="md" onClick={() => {
               setIsPostCreateModalOpen(false);
               setPostFormData({});
+              setPostServerError(null);
             }}>
               취소
             </Button>
-            <Button variant="primary" size="md" onClick={handlePostCreate}>
+            <Button variant="primary" size="md" type="submit" form="post-create-form">
               생성
             </Button>
           </>
         }
       >
-        <PostForm formData={postFormData} onChange={setPostFormData} />
+        <PostForm
+          key="post-create"
+          formData={postFormData}
+          onChange={setPostFormData}
+          onSubmit={handlePostCreate}
+          serverError={postServerError}
+        />
       </Modal>
 
       <Modal
@@ -404,6 +507,7 @@ export const ManagementPage: React.FC = () => {
           setIsPostEditModalOpen(false);
           setPostFormData({});
           setSelectedPost(null);
+          setPostServerError(null);
         }}
         title="게시글 수정"
         size="large"
@@ -414,10 +518,11 @@ export const ManagementPage: React.FC = () => {
               setIsPostEditModalOpen(false);
               setPostFormData({});
               setSelectedPost(null);
+              setPostServerError(null);
             }}>
               취소
             </Button>
-            <Button variant="primary" size="md" onClick={handlePostUpdate}>
+            <Button variant="primary" size="md" type="submit" form="post-create-form">
               수정 완료
             </Button>
           </>
@@ -429,7 +534,13 @@ export const ManagementPage: React.FC = () => {
               ID: {selectedPost.id} | 생성일: {selectedPost.createdAt} | 조회수: {selectedPost.views}
             </Alert>
           )}
-          <PostForm formData={postFormData} onChange={setPostFormData} />
+          <PostForm
+            key={selectedPost?.id || "post-edit"}
+            formData={postFormData}
+            onChange={setPostFormData}
+            onSubmit={handlePostUpdate}
+            serverError={postServerError}
+          />
         </div>
       </Modal>
     </div>

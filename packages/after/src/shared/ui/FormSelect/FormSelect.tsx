@@ -1,5 +1,6 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { useFormField } from "../Form/Form";
 
 interface Option {
   value: string;
@@ -54,40 +55,53 @@ export interface FormSelectProps
   placeholder?: string;
   error?: string;
   helpText?: string;
+  noWrapper?: boolean; // FormControl 내부에서 사용할 때 true
 }
 
-export const FormSelect: React.FC<FormSelectProps> = ({
-  className,
-  name,
-  value,
-  onChange,
-  options,
-  label,
-  placeholder = "Select an option...",
-  required = false,
-  disabled = false,
-  error,
-  helpText,
-  size = "md",
-  ...props
-}) => {
-  return (
-    <div className={formGroupVariants()}>
-      {label && (
-        <label className={formLabelVariants()}>
-          {label}
-          {required && <span className="text-red-700">*</span>}
-        </label>
-      )}
+export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
+  (
+    {
+      className,
+      name,
+      value,
+      onChange,
+      options,
+      label,
+      placeholder = "Select an option...",
+      required = false,
+      disabled = false,
+      error,
+      helpText,
+      size = "md",
+      noWrapper = false,
+      ...props
+    },
+    ref
+  ) => {
+    // FormField context에서 에러 상태 가져오기
+    let fieldError;
+    try {
+      const field = useFormField();
+      fieldError = field.error;
+    } catch {
+      // FormField context 외부에서 사용될 경우 무시
+      fieldError = undefined;
+    }
 
+    // aria-invalid 속성으로 에러 상태 감지 (FormControl에서 전달됨)
+    const hasError = !!error || !!fieldError || props["aria-invalid"] === true || props["aria-invalid"] === "true";
+
+    const selectElement = (
       <select
+        ref={ref}
+        {...props}
+        id={props.id || name}
         name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
         disabled={disabled}
-        className={formSelectVariants({ error: !!error, size, className })}
-        {...props}
+        className={formSelectVariants({ error: hasError, size, className })}
       >
         <option value="" disabled>
           {placeholder}
@@ -98,9 +112,30 @@ export const FormSelect: React.FC<FormSelectProps> = ({
           </option>
         ))}
       </select>
+    );
 
-      {error && <span className={formHelperTextVariants({ error: true })}>{error}</span>}
-      {helpText && !error && <span className={formHelperTextVariants()}>{helpText}</span>}
-    </div>
-  );
-};
+    // FormControl 내부에서 사용할 때는 순수 select만 반환
+    if (noWrapper) {
+      return selectElement;
+    }
+
+    // 독립적으로 사용할 때는 label과 error를 포함한 전체 구조 반환
+    return (
+      <div className={formGroupVariants()}>
+        {label && (
+          <label className={formLabelVariants()}>
+            {label}
+            {required && <span className="text-red-700">*</span>}
+          </label>
+        )}
+
+        {selectElement}
+
+        {error && <span className={formHelperTextVariants({ error: true })}>{error}</span>}
+        {helpText && !error && <span className={formHelperTextVariants()}>{helpText}</span>}
+      </div>
+    );
+  }
+);
+
+FormSelect.displayName = "FormSelect";
